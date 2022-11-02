@@ -19,7 +19,7 @@ public class HttpServer : IDisposable
 
     public void Start()
     {
-        if (Status == ServerStatus.Start)
+        if (Status is ServerStatus.Start)
         {
             Console.WriteLine("Already launched.");
             return;
@@ -41,7 +41,7 @@ public class HttpServer : IDisposable
 
     public void Stop()
     {
-        if (Status == ServerStatus.Stop)
+        if (Status is ServerStatus.Stop)
         {
             Console.WriteLine("Already stopped.");
             return;
@@ -59,23 +59,35 @@ public class HttpServer : IDisposable
 
     private void ListenerCallback(IAsyncResult result)
     {
-        if (!_httpListener.IsListening) return;
-        var httpContext = _httpListener.EndGetContext(result);
-        var request = httpContext.Request;
-        var response = httpContext.Response;
+        try
+        {
+            if (!_httpListener.IsListening) return;
+            var httpContext = _httpListener.EndGetContext(result);
+            var response = httpContext.Response;
 
-        var serverResponse = ServerResponseProvider.GetResponse(_serverSettings.Path, request.RawUrl ?? "/");
-        var buffer = serverResponse.Buffer;
-        response.Headers.Set("Content-Type", serverResponse.ContentType);
+            var serverResponse = ServerResponseProvider.GetResponse(_serverSettings.Path, httpContext.Request);
+            response.Headers.Set("Content-Type", serverResponse.ContentType);
+            response.StatusCode = (int)serverResponse.ResponseCode;
 
-        var output = response.OutputStream;
-        output.WriteAsync(buffer, 0, buffer.Length);
-        Task.WaitAll();
-        
-        output.Close();
-        response.Close();
-        
-        Listen();
+            if (serverResponse.ResponseCode is HttpStatusCode.Redirect)
+                response.Redirect(@"http://steampowered.com");
+
+            var output = response.OutputStream;
+            output.WriteAsync(serverResponse.Buffer, 0, serverResponse.Buffer.Length);
+            Task.WaitAll();
+
+            output.Close();
+            response.Close();
+
+            Listen();
+        }
+        catch
+        {
+            if (!_httpListener.IsListening)
+                return;
+            Console.WriteLine("An error occured.");
+            Stop();
+        }
     }
 
     public void Dispose()
