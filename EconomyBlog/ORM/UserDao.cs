@@ -8,8 +8,8 @@ public class UserDao : IUserDao
     private const string ConnectionString =
         $@"Data Source=DESKTOP-MFCEQVI\SQLEXPRESS;Initial Catalog={DbName};Integrated Security=True";
 
-    private const string TableName = "[dbo].[Accounts]";
-    private const string DbName = "SteamDB";
+    private const string TableName = "[dbo].[Users]";
+    private const string DbName = "dev_basics_sem1";
 
     public IEnumerable<User> GetAll()
     {
