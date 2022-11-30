@@ -1,8 +1,9 @@
 using System.Net;
 using System.Text.Json;
+using EconomyBlog.Structures;
 using static System.GC;
 
-namespace HttpServer;
+namespace EconomyBlog.ServerLogic;
 
 public class HttpServer : IDisposable
 {
@@ -63,29 +64,19 @@ public class HttpServer : IDisposable
         {
             if (!_httpListener.IsListening) return;
             var httpContext = _httpListener.EndGetContext(result);
-            var response = httpContext.Response;
+            
+            var response = ServerResponseProvider.GetResponse(_serverSettings.Path, httpContext);
+            if (response.StatusCode == (int)HttpStatusCode.Redirect)
+                response.Redirect(@"https://steampowered.com");
 
-            var serverResponse = ServerResponseProvider.GetResponse(_serverSettings.Path, httpContext.Request);
-            response.Headers.Set("Content-Type", serverResponse.ContentType);
-            response.StatusCode = (int)serverResponse.ResponseCode;
-
-            if (serverResponse.ResponseCode is HttpStatusCode.Redirect)
-                response.Redirect(@"http://steampowered.com");
-
-            var output = response.OutputStream;
-            output.WriteAsync(serverResponse.Buffer, 0, serverResponse.Buffer.Length);
-            Task.WaitAll();
-
-            output.Close();
             response.Close();
-
             Listen();
         }
         catch
         {
             if (!_httpListener.IsListening)
                 return;
-            Console.WriteLine("An error occured.");
+            Console.WriteLine("An error occured. Try to start server again.");
             Stop();
         }
     }

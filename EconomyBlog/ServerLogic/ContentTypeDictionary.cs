@@ -1,8 +1,8 @@
-namespace HttpServer;
+namespace EconomyBlog.ServerLogic;
 
 internal static partial class ServerResponseProvider
 {
-    private static readonly Dictionary<string, string> ContentTypeDictionary = new()
+    internal static readonly Dictionary<string, string> ContentTypeDictionary = new()
     {
         {"bmp", "image/bmp"},
         {"gif", "image/gif"},

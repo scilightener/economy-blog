@@ -1,4 +1,4 @@
-﻿namespace HttpServer;
+﻿namespace EconomyBlog;
 
 internal static class Program
 {
@@ -6,7 +6,7 @@ internal static class Program
     
     public static void Main(string[] args)
     {
-        using var server = new HttpServer();
+        using var server = new ServerLogic.HttpServer();
         server.Start();
         _isRunning = true;
         while (_isRunning)
@@ -14,7 +14,7 @@ internal static class Program
         Console.WriteLine("Exiting gracefully...");
     }
 
-    private static void Handle(string command, HttpServer server)
+    private static void Handle(string command, ServerLogic.HttpServer server)
     {
         switch (command)
         {

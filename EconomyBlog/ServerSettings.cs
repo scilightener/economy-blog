@@ -1,4 +1,4 @@
-namespace HttpServer;
+namespace EconomyBlog;
 
 public class ServerSettings
 {
