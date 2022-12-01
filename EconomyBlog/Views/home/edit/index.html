@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    <link rel="stylesheet" href="../styles.css" type="text/css" />
+    <link rel="stylesheet" href="../../global.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo_container">
+            <a href="../../feed/index.html">
+                <img class="main_logo" src="../content/main_logo.png" height="130" alt="logo_picture">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="info_container">
+            <label class="form_header">Edit your info</label>
+            <form name=input_data class="edit_info_form" method="POST" action="#">
+                <table class="text_info">
+                    <tbody>
+                        <tr class="first_name">
+                            <td>First Name</td>
+                            <td><input type="text" name="first_name" placeholder="Name"></td>
+                        </tr>
+                        <tr class="last_name">
+                            <td>Last Name</td>
+                            <td><input type="text" name="last_name" placeholder="Surname"></td>
+                        </tr>
+                        <tr class="age">
+                            <td>Age</td>
+                            <td>
+                                <label class="age_select" for="age_slct">
+                                    <select id="age_slct" class="age_select" name="age">
+                                        <option value="06">6</option>
+                                        <option value="07">7</option>
+                                        <option value="08">8</option>
+                                        <option value="09">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                        <option value="32">32</option>
+                                        <option value="33">33</option>
+                                        <option value="34">34</option>
+                                        <option value="35">35</option>
+                                        <option value="36">36</option>
+                                        <option value="37">37</option>
+                                        <option value="38">38</option>
+                                        <option value="39">39</option>
+                                        <option value="40">40</option>
+                                        <option value="41">41</option>
+                                        <option value="42">42</option>
+                                        <option value="43">43</option>
+                                        <option value="44">44</option>
+                                        <option value="45">45</option>
+                                        <option value="46">46</option>
+                                        <option value="47">47</option>
+                                        <option value="48">48</option>
+                                        <option value="49">49</option>
+                                        <option value="50">50</option>
+                                        <option value="51">51</option>
+                                        <option value="52">52</option>
+                                        <option value="53">53</option>
+                                        <option value="54">54</option>
+                                        <option value="55">55</option>
+                                        <option value="56">56</option>
+                                        <option value="57">57</option>
+                                        <option value="58">58</option>
+                                        <option value="59">59</option>
+                                        <option value="60">60</option>
+                                        <option value="61">61</option>
+                                        <option value="62">62</option>
+                                        <option value="69">я задолбался</option>
+                                    </select>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr class="education">
+                            <td>Education</td>
+                            <td><input type="text" name="education" placeholder="Education"></td>
+                        </tr>
+                        <tr class="job">
+                            <td>Job</td>
+                            <td><input type="text" name="job" placeholder="Job"></td>
+                        </tr>
+                        <tr class="risk_factor">
+                            <td>Your risk factor</td>
+                            <td>
+                                <input type="range" class="risk_factor_slider_range" value=0 min=0 max=10
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output class="risk_factor_slider_value">0</output>
+                            </td>
+                        </tr>
+                        <tr class="favorite_topics">
+                            <td>Your favorite topics</td>
+                            <td>
+                                <div class="favorite_topics_checkboxes">
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=1 onclick="chkcontrol(0)">1
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=2 onclick="chkcontrol(1)">2
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=3 onclick="chkcontrol(2)">3
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=4 onclick="chkcontrol(3)">4
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=5 onclick="chkcontrol(4)">5
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=6 onclick="chkcontrol(5)">6
+                                    </label>
+
+                                    <label class="favorite_topic">
+                                        <input type="checkbox" name="chkb" value=7 onclick="chkcontrol(6)">7
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="update_user_data_button_container">
+                    <button type="submit">SAVE</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script type="text/javascript">
+        function chkcontrol(j) {
+            var total = 0;
+            for (var i = 0; i < document.input_data.chkb.length; i++) {
+                if (document.input_data.chkb[i].checked) {
+                    total++;
+                }
+                if (total > 5) {
+                    alert("Please choose no more than 5 topics")
+                    document.input_data.chkb[j].checked = false;
+                    return false;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

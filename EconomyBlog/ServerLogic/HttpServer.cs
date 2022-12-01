@@ -66,8 +66,6 @@ public class HttpServer : IDisposable
             var httpContext = _httpListener.EndGetContext(result);
             
             var response = ServerResponseProvider.GetResponse(_serverSettings.Path, httpContext);
-            if (response.StatusCode == (int)HttpStatusCode.Redirect)
-                response.Redirect(@"https://steampowered.com");
 
             response.Close();
             Listen();

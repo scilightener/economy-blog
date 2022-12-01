@@ -1,92 +1,26 @@
-using System.Data.SqlClient;
 using EconomyBlog.Models;
 
 namespace EconomyBlog.ORM;
 
 public class UserDao : IUserDao
 {
-    private const string ConnectionString =
-        $@"Data Source=DESKTOP-MFCEQVI\SQLEXPRESS;Initial Catalog={DbName};Integrated Security=True";
-
     private const string TableName = "[dbo].[Users]";
     private const string DbName = "dev_basics_sem1";
 
-    public IEnumerable<User> GetAll()
+    private readonly DataBase _orm; 
+
+    public UserDao()
     {
-        var query = $"select * from {TableName}";
-        using var connection = new SqlConnection(ConnectionString);
-        connection.Open();
-        
-        var cmd = new SqlCommand(query, connection);
-        using var reader = cmd.ExecuteReader();
-        if (!reader.HasRows) yield break;
-        while (reader.Read())
-            yield return new User(
-                reader.GetInt32(0),
-                reader.GetString(1),
-                reader.GetString(2),
-                reader.GetString(3),
-                reader.GetString(4),
-                reader.GetInt32(5),
-                reader.GetString(6),
-                reader.GetString(7),
-                reader.GetDouble(8));
+        _orm = new DataBase(DbName, TableName);
     }
 
-    public User? GetById(int id)
-    {
-        var query = $"select * from {TableName} where Id={id}";
-        using var connection = new SqlConnection(ConnectionString);
-        connection.Open();
-        
-        var cmd = new SqlCommand(query, connection);
-        using var reader = cmd.ExecuteReader();
-        
-        if (!reader.HasRows || !reader.Read()) return null;
-        
-        return new User(
-            reader.GetInt32(0),
-            reader.GetString(1),
-            reader.GetString(2),
-            reader.GetString(3),
-            reader.GetString(4),
-            reader.GetInt32(5),
-            reader.GetString(6),
-            reader.GetString(7),
-            reader.GetDouble(8));
-    }
+    public IEnumerable<User> GetAll() => _orm.Select<User>();
 
-    public void Insert(string login, string password)
-    {
-        var query = $"insert into {TableName} values ('{login}', '{password}')";
-        using var connection = new SqlConnection(ConnectionString);
-        connection.Open();
+    public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where user_id={id}").FirstOrDefault();
 
-        var cmd = new SqlCommand(query, connection);
-        cmd.ExecuteNonQuery();
-    }
+    public void Insert(string login, string password) => _orm.Insert(new User(login, password));
 
-    public void Remove(int? id = null)
-    {
-        var query = $"delete from {TableName}";
-        query += id is not null ? $"where Id={id}" : "";
+    public void Remove(int? id = null) => _orm.Delete(id);
 
-        using var connection = new SqlConnection(ConnectionString);
-        connection.Open();
-
-        var cmd = new SqlCommand(query);
-        cmd.ExecuteNonQuery();
-    }
-
-    public void Update(string field, string value, int? id = null)
-    {
-        var query = $"update {TableName} set {field}={value}";
-        query += id is not null ? $"where Id={id}" : "";
-
-        using var connection = new SqlConnection(ConnectionString);
-        connection.Open();
-
-        var cmd = new SqlCommand(query);
-        cmd.ExecuteNonQuery();
-    }
+    public void Update(string field, string value, int? id = null) => _orm.Update(field, value, id);
 }

@@ -50,7 +50,7 @@ internal class DataBase
                 p => $"'{p.GetValue(instance) ?? string.Empty}'");
         var query =
             $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) " +
-            $"values {string.Join(", ", properties.Values)}";
+            $"values ({string.Join(", ", properties.Values)})";
         Execute(query);
     }
 

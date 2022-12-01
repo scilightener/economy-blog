@@ -1,0 +1,182 @@
+.info_container {
+    background: #fff;
+    max-width: 600px;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form_header {
+    text-align: center;
+    padding: 0px 30px 10px 30px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.edit_info_redir_container {
+    padding-top: 40px;
+    text-align: center;
+}
+
+.edit_info_redir {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.edit_info_redir:hover {
+    text-decoration: none;
+    color: #57b846;
+}
+
+.show .user_pic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.show .user_pic img {
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+}
+
+.text_info input[type="text"] {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666;
+    display: block;
+    width: 100%;
+    max-width: 250px;
+    background: #e6e6e6;
+    height: 38px;
+    border-radius: 16px;
+    padding: 0 30px;
+}
+
+td:first-child {
+    font-weight: 600;
+}
+
+main .text_info td {
+    padding: 15px 25px;
+}
+
+.age_select {
+    position: relative;
+}
+
+.age_select select {
+    padding: 7px 40px 7px 12px;
+    border: 1px solid #e8eaed;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 1px 3px -2px #9098a9;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 250ms ease;
+}
+
+.age_select select option {
+    color: #223254;
+}
+
+.age_select select option[value=""][disabled] {
+    display: none;
+}
+
+.age_select select:focus {
+    outline: none;
+    border-color: #07f;
+    box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.2);
+}
+
+.age_select select:hover+svg {
+    stroke: #07f;
+}
+
+.risk_factor_slider_range {
+    width: calc(100% - (57px));
+    height: 5px;
+    border-radius: 5px;
+    background: #d7dcdf;
+}
+
+.risk_factor_slider_range::-webkit-slider-thumb,
+.risk_factor_slider_range::-moz-range-thumb {
+    border: 0;
+    background: #2c3e50;
+    cursor: pointer;
+}
+
+.risk_factor_slider_value {
+    color: #fff;
+    border-radius: 3px;
+    background: #2c3e50;
+    padding: 2px 5px;
+    margin-left: 6px;
+}
+
+.favorite_topics_checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.favorite_topics_checkboxes label {
+    padding: 10px;
+}
+
+.favorite_topic {
+    margin-right: 17px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+    display: grid;
+    grid-template-columns: 1em auto;
+    gap: 0.9em;
+}
+
+.update_user_data_button_container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
+    margin: 10px;
+}
+
+@media screen and (max-width: 490px) {
+    .info_container {
+        box-shadow: none;
+    }
+
+    main,
+    .info_container {
+        padding: 0;
+        margin: 0;
+    }
+
+    tr {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user_pic {
+        flex-direction: column-reverse;
+    }
+
+    .user_pic .form_header {
+        margin-bottom: 20px;
+    }
+}
