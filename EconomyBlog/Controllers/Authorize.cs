@@ -7,7 +7,7 @@ using EconomyBlog.Structures;
 namespace EconomyBlog.Controllers;
 
 [HttpController("auth")]
-public static class AuthorizeController
+public class AuthorizeController : Controller
 {
     [HttpPOST]
     public static ActionResult LoginUser(string login, string password)
@@ -22,13 +22,5 @@ public static class AuthorizeController
     }
 
     [HttpGET]
-    public static ActionResult GetLoginPage(string path) => ProcessStatic(path);
-
-    private static ActionResult ProcessStatic(string path) =>
-        new()
-        {
-            StatusCode = HttpStatusCode.OK,
-            ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = File.ReadAllBytes($"./Views/auth/{path}" + (path.Contains('.') ? "" : "/index.html"))
-        };
+    public static ActionResult GetLoginPage(string path) => ProcessStatic("auth", path);
 }

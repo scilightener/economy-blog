@@ -7,7 +7,7 @@ using EconomyBlog.Structures;
 namespace EconomyBlog.Controllers;
 
 [HttpController("register")]
-public static class RegisterController
+public class RegisterController : Controller
 {
     [HttpPOST]
     public static ActionResult RegisterUser(string login, string password)
@@ -21,13 +21,5 @@ public static class RegisterController
     }
 
     [HttpGET]
-    public static ActionResult GetRegisterPage(string path) => ProcessStatic(path);
-
-    private static ActionResult ProcessStatic(string path) =>
-        new()
-        {
-            StatusCode = HttpStatusCode.OK,
-            ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = File.ReadAllBytes($"./Views/register/{path}" + (path.Contains('.') ? "" : "/index.html"))
-        };
+    public static ActionResult GetRegisterPage(string path) => ProcessStatic("register", path);
 }

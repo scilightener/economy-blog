@@ -81,7 +81,7 @@ internal static class ServerResponseProvider
             .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
             .ToArray();
 
-        if (method?.Invoke(null, queryParams) is not ActionResult ret) return false;
+        if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret) return false;
         
         // if (!HandleCookies(request, response, method.Name, ret))
         //     return true;
