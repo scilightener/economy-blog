@@ -1,8 +1,8 @@
-namespace EconomyBlog.ServerLogic;
+namespace EconomyBlog.Structures;
 
-internal struct ContentType
+internal struct ContentTypeProvider
 {
-    internal static readonly Dictionary<string, string> Allowed = new()
+    private static readonly Dictionary<string, string> Allowed = new()
     {
         {"bmp", "image/bmp"},
         {"gif", "image/gif"},
@@ -37,4 +37,10 @@ internal struct ContentType
         {"tex", "application/x-tex"},
         {"xml", "application/xml"},
     };
+    
+    public static string GetContentType(string path)
+    {
+        var ext = path.Contains('.') ? path.Split('.')[^1] : "html";
+        return Allowed.ContainsKey(ext) ? Allowed[ext] : "text/plain";
+    }
 }

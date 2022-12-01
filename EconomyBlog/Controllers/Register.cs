@@ -1,9 +1,8 @@
 using System.Net;
-using System.Text;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
-using EconomyBlog.Models;
 using EconomyBlog.ORM;
+using EconomyBlog.Structures;
 
 namespace EconomyBlog.Controllers;
 
@@ -22,11 +21,13 @@ public static class RegisterController
     }
 
     [HttpGET]
-    public static ActionResult GetRegisterPage()
-    {
-        return new ActionResult
+    public static ActionResult GetRegisterPage(string path) => ProcessStatic(path);
+
+    private static ActionResult ProcessStatic(string path) =>
+        new()
         {
-            Buffer = File.ReadAllBytes("./Views/register/index.html")
+            StatusCode = HttpStatusCode.OK,
+            ContentType = ContentTypeProvider.GetContentType(path),
+            Buffer = File.ReadAllBytes($"./Views/register/{path}" + (path.Contains('.') ? "" : "/index.html"))
         };
-    }
 }

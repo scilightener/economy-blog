@@ -64,9 +64,7 @@ public class HttpServer : IDisposable
         {
             if (!_httpListener.IsListening) return;
             var httpContext = _httpListener.EndGetContext(result);
-            
             var response = ServerResponseProvider.GetResponse(_serverSettings.Path, httpContext);
-
             response.Close();
             Listen();
         }

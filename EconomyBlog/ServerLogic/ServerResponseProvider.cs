@@ -10,7 +10,7 @@ using EconomyBlog.ServerLogic.SessionLogic;
 
 namespace EconomyBlog.ServerLogic;
 
-internal static partial class ServerResponseProvider
+internal static class ServerResponseProvider
 {
     public static HttpListenerResponse GetResponse(string path, HttpListenerContext ctx)
     {
@@ -25,6 +25,7 @@ internal static partial class ServerResponseProvider
         else if (TryHandleController(request, response))
             return response;
         // FillResponse(response, "text/plain", (int)HttpStatusCode.NotFound, buffer);
+        response.OutputStream.Write(buffer);
         return response;
     }
     
@@ -40,26 +41,21 @@ internal static partial class ServerResponseProvider
         return true;
     }
 
-    private static string GetContentType(string path)
-    {
-        var ext = path.Contains('.') ? path.Split('.')[^1] : "html";
-        return ContentTypeDictionary.ContainsKey(ext) ? ContentTypeDictionary[ext] : "text/plain";
-    }
+    
     
     private static bool TryHandleController(HttpListenerRequest request, HttpListenerResponse response)
     {
         if (request.Url!.Segments.Length < 2) return false;
-        
+        if (!request.Url.Segments[^1].Contains('.') && !request.RawUrl!.EndsWith('/'))
+        {
+            response.Redirect(request.Url + "/");
+            return true;
+        }
+
         using var sr = new StreamReader(request.InputStream, request.ContentEncoding);
         var bodyParam = sr.ReadToEnd();
         
         var controllerName = request.Url.Segments[1].Replace("/", "");
-        var strParams = request.Url.Segments
-            .Skip(2)
-            .Select(s => s.Replace("/", ""))
-            .Concat(bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()))
-            .ToArray();
-
         var assembly = Assembly.GetExecutingAssembly();
         var controller = assembly.GetTypes()
             .Where(t => Attribute.IsDefined(t, typeof(HttpController)))
@@ -76,6 +72,11 @@ internal static partial class ServerResponseProvider
                         .GetField("MethodUri")?
                         .GetValue(attr)?.ToString() ?? "")));
 
+        var path = string.Join("", request.Url.Segments.Skip(2));
+        var strParams = request.HttpMethod == "POST"
+            ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).ToArray()
+            : new[] { path };
+
         var queryParams = method?.GetParameters()
             .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
             .ToArray();
@@ -85,7 +86,7 @@ internal static partial class ServerResponseProvider
         // if (!HandleCookies(request, response, method.Name, ret))
         //     return true;
         
-        FillResponse(response, ret);
+        HandleActionResult(response, ret);
         return true;
     }
 
@@ -118,11 +119,11 @@ internal static partial class ServerResponseProvider
     // }
     
 
-    private static void FillResponse(HttpListenerResponse response, ActionResult result)
+    private static void HandleActionResult(HttpListenerResponse response, ActionResult result)
     {
         response.Headers.Set("Content-Type", result.ContentType);
         response.StatusCode = (int)result.StatusCode;
-        response.OutputStream.Write(result.Buffer, 0, result.Buffer.Length);
+        response.OutputStream.Write(result.Buffer);
         if (result.StatusCode is HttpStatusCode.Redirect)
             response.Redirect(result.RedirectUrl!);
     }
