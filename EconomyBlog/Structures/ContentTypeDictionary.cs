@@ -1,8 +1,8 @@
 namespace EconomyBlog.ServerLogic;
 
-internal static partial class ServerResponseProvider
+internal struct ContentType
 {
-    internal static readonly Dictionary<string, string> ContentTypeDictionary = new()
+    internal static readonly Dictionary<string, string> Allowed = new()
     {
         {"bmp", "image/bmp"},
         {"gif", "image/gif"},
