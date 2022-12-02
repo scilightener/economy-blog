@@ -16,32 +16,14 @@ internal static class ServerResponseProvider
     {
         var request = ctx.Request;
         var response = ctx.Response;
-        var rawUrl = request.RawUrl ?? string.Empty;
         var buffer = Encoding.UTF8.GetBytes("Error 404. Not Found.");
         if (!Directory.Exists(path))
             buffer = Encoding.UTF8.GetBytes($"Directory {path} not found.");
-        // else if (TryGetFile(path + rawUrl.Replace("%20", " "), request, response))
-        //     return response;
         else if (TryHandleController(request, response))
             return response;
-        // FillResponse(response, "text/plain", (int)HttpStatusCode.NotFound, buffer);
         response.OutputStream.Write(buffer);
         return response;
     }
-    
-    private static bool TryGetFile(string filePath, HttpListenerRequest request, HttpListenerResponse response)
-    {
-        byte[] buffer;
-        if (Directory.Exists(filePath) && File.Exists(filePath + "/index.html"))
-            buffer = File.ReadAllBytes(filePath + "/index.html");
-        else if (!File.Exists(filePath))
-            return false;
-        else buffer = File.ReadAllBytes(filePath);
-        // FillResponse(response, GetContentType(request.RawUrl ?? ""), (int)HttpStatusCode.OK, buffer);
-        return true;
-    }
-
-    
     
     private static bool TryHandleController(HttpListenerRequest request, HttpListenerResponse response)
     {
@@ -54,6 +36,11 @@ internal static class ServerResponseProvider
 
         using var sr = new StreamReader(request.InputStream, request.ContentEncoding);
         var bodyParam = sr.ReadToEnd();
+
+        var path = string.Join("", request.Url.Segments.Skip(2));
+        var strParams = request.HttpMethod == "POST"
+            ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).ToArray()
+            : new[] { path };
         
         var controllerName = request.Url.Segments[1].Replace("/", "");
         var assembly = Assembly.GetExecutingAssembly();
@@ -71,11 +58,6 @@ internal static class ServerResponseProvider
                         attr.GetType()
                         .GetField("MethodUri")?
                         .GetValue(attr)?.ToString() ?? "")));
-
-        var path = string.Join("", request.Url.Segments.Skip(2));
-        var strParams = request.HttpMethod == "POST"
-            ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).ToArray()
-            : new[] { path };
 
         var queryParams = method?.GetParameters()
             .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))

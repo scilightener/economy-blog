@@ -1,8 +1,8 @@
 using System.Net;
+using System.Web;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.ORM;
-using EconomyBlog.Structures;
 
 namespace EconomyBlog.Controllers;
 
@@ -12,11 +12,21 @@ public class RegisterController : Controller
     [HttpPOST]
     public static ActionResult RegisterUser(string login, string password)
     {
-        var result = new ActionResult();
         var dao = new UserDao();
-        dao.Insert(login, password);
-        result.StatusCode = HttpStatusCode.Redirect;
-        result.RedirectUrl = @"http://localhost:7700/home/edit";
+        try
+        {
+            dao.Insert(login, HttpUtility.UrlDecode(password));
+        }
+        catch
+        {
+            return new ActionResult();
+        }
+        var result = new ActionResult
+        {
+            StatusCode = HttpStatusCode.Redirect,
+            RedirectUrl = @"http://localhost:7700/home/edit/",
+            
+        };
         return result;
     }
 

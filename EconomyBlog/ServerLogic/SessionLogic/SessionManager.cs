@@ -6,10 +6,10 @@ public static class SessionManager
 {
     private static readonly MemoryCache Cache = new(new MemoryCacheOptions());
 
-    public static Guid CreateSession(int accountId, string email, DateTime created)
+    public static Guid CreateSession(int accountId, string login, DateTime created)
     {
-        var session = new Session(Guid.NewGuid(), accountId, email, created);
-        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(2));
+        var session = new Session(Guid.NewGuid(), accountId, login, created);
+        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));
         Cache.Set(session.Id, session, cacheOptions);
         return session.Id;
     }

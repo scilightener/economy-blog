@@ -1,6 +1,5 @@
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
-using EconomyBlog.Structures;
 
 namespace EconomyBlog.Controllers;
 
