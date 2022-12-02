@@ -18,7 +18,7 @@ public class UserDao : IUserDao
 
     public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where user_id={id}").FirstOrDefault();
 
-    public void Insert(string login, string password) => _orm.Insert(new User(login, password));
+    public int Insert(string login, string password) => _orm.Insert(new User(login, password));
 
     public void Remove(int? id = null) => _orm.Delete(id);
 

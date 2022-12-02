@@ -20,11 +20,11 @@ public class User
     [DbItem("job")]
     public string Job { get; }
     [DbItem("risk_index")]
-    public double RiskIndex { get; }
+    public decimal RiskIndex { get; }
     // [DbItem("favorite_topics")]
     // public int FavoriteTopicsId { get; }
 
-    public User(int id, string login, string password, string firstName, string lastName, int age, string education, string job, double riskIndex/*, int favoriteTopicsId*/)
+    public User(int id, string login, string password, string firstName, string lastName, int age, string education, string job, decimal riskIndex/*, int favoriteTopicsId*/)
     {
         Id = id;
         Login = login;

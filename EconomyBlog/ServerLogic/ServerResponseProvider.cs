@@ -105,6 +105,7 @@ internal static class ServerResponseProvider
     {
         response.Headers.Set("Content-Type", result.ContentType);
         response.StatusCode = (int)result.StatusCode;
+        if (result.Cookies != null) response.Cookies.Add(result.Cookies);
         response.OutputStream.Write(result.Buffer);
         if (result.StatusCode is HttpStatusCode.Redirect)
             response.Redirect(result.RedirectUrl!);

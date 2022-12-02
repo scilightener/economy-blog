@@ -68,11 +68,11 @@ public class HttpServer : IDisposable
             response.Close();
             Listen();
         }
-        catch
+        catch (Exception ex)
         {
             if (!_httpListener.IsListening)
                 return;
-            Console.WriteLine("An error occured. Try to start server again.");
+            Console.WriteLine("An error occured. Try to start server again." + ex.Message);
             Stop();
         }
     }

@@ -1,7 +1,10 @@
 using System.Net;
+using System.Web;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
+using EconomyBlog.Models;
 using EconomyBlog.ORM;
+using EconomyBlog.ServerLogic.SessionLogic;
 
 namespace EconomyBlog.Controllers;
 
@@ -11,12 +14,30 @@ public class AuthorizeController : Controller
     [HttpPOST]
     public static ActionResult LoginUser(string login, string password)
     {
-        throw new NotImplementedException();
-        var result = new ActionResult();
         var dao = new UserDao();
-        dao.Insert(login, password);
-        result.StatusCode = HttpStatusCode.Redirect;
-        result.RedirectUrl = @"http://localhost:7700/feed";
+        Console.WriteLine(dao.GetAll().Count());
+        User? user;
+        try
+        {
+            user = dao.GetAll().FirstOrDefault(acc => acc.Login == login && acc.Password == HttpUtility.UrlDecode(password));
+        }
+        catch
+        {
+            return new ActionResult();
+        }
+
+        if (user is null)
+            return new ActionResult();
+        
+        var result = new ActionResult
+        {
+            StatusCode = HttpStatusCode.Redirect,
+            RedirectUrl = @"/feed/",
+            Cookies = new CookieCollection
+            {
+                new Cookie("SessionId", SessionManager.CreateSession(user.Id, login, DateTime.Now).ToString(), "/")
+            }
+        };
         return result;
     }
 

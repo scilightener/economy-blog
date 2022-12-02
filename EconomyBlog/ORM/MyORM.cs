@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Threading.Channels;
 using EconomyBlog.Attributes;
 
 namespace EconomyBlog.ORM;
@@ -41,7 +42,7 @@ internal class DataBase
         }
     }
 
-    public void Insert<T>(T instance)
+    public int Insert<T>(T instance)
     {
         var properties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
@@ -49,9 +50,12 @@ internal class DataBase
             .ToDictionary(p => (p.GetCustomAttribute(typeof(DbItem)) as DbItem)!.Name,
                 p => $"'{p.GetValue(instance) ?? string.Empty}'");
         var query =
-            $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) " +
+            $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) output inserted.user_id " +
             $"values ({string.Join(", ", properties.Values)})";
-        Execute(query);
+        using var connection = new SqlConnection(_connectionString);
+        connection.Open();
+        var cmd = new SqlCommand(query, connection);
+        return (int)cmd.ExecuteScalar();
     }
 
     public void Delete(int? id = null)
