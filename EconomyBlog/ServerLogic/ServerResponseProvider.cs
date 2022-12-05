@@ -1,11 +1,9 @@
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
-using EconomyBlog.Models;
 using EconomyBlog.ServerLogic.SessionLogic;
 
 namespace EconomyBlog.ServerLogic;
@@ -59,47 +57,27 @@ internal static class ServerResponseProvider
                         .GetField("MethodUri")?
                         .GetValue(attr)?.ToString() ?? "")));
 
-        var queryParams = method?.GetParameters()
-            .Select((p, i) => Convert.ChangeType(strParams[i], p.ParameterType))
+        var queryParams = new object[] { GetSessionGuid(request) }.Concat(
+                method?.GetParameters()
+                    .Skip(1)
+                    .Select((p, i) => i < strParams.Length
+                        ? Convert.ChangeType(strParams[i], p.ParameterType)
+                        : p.DefaultValue) ?? Array.Empty<object?>())
             .ToArray();
 
         if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret) return false;
-        
-        // if (!HandleCookies(request, response, method.Name, ret))
-        //     return true;
-        
         HandleActionResult(response, ret);
         return true;
     }
 
-    // private static bool HandleCookies(HttpListenerRequest request, HttpListenerResponse response, string methodName, object? ret)
-    // {
-    //     var sessionCookie = request.Cookies["SessionId"]?.Value ?? "";
-    //     switch (methodName)
-    //     {
-    //         case "Login":
-    //             var retParsed = ((int, Guid))(ret ?? (-1, Guid.Empty));
-    //             if (retParsed == (-1, Guid.Empty))
-    //                 return true;
-    //             response.Cookies.Add(new Cookie("SessionId", retParsed.Item2.ToString()));
-    //             Console.WriteLine();
-    //             return false;
-    //         case "GetAccounts":
-    //             if (SessionManager.CheckSession(Guid.Parse(sessionCookie)))
-    //                 return true;
-    //             FillResponse(response, "text/plain", (int)HttpStatusCode.Unauthorized, Array.Empty<byte>());
-    //             return false;
-    //         case "GetAccountInfo":
-    //             var currentSession = SessionManager.GetSessionInfo(Guid.Parse(sessionCookie));
-    //             if (ret is not null && currentSession is not null && currentSession.AccountId == ((User)ret).Id)
-    //                 return true;
-    //             FillResponse(response, "text/plain", (int)HttpStatusCode.Unauthorized, Array.Empty<byte>());
-    //             return false;
-    //         default:
-    //             return true;
-    //     }
-    // }
-    
+    private static Guid GetSessionGuid(HttpListenerRequest request)
+    {
+        var cookie = request.Cookies["SessionId"]?.Value ?? "";
+        if (!Guid.TryParse(cookie, out var parsed)) return Guid.Empty;
+        return SessionManager.CheckSession(parsed)
+            ? parsed
+            : Guid.Empty;
+    }
 
     private static void HandleActionResult(HttpListenerResponse response, ActionResult result)
     {

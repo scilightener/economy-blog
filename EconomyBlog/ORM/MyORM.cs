@@ -50,7 +50,7 @@ internal class DataBase
             .ToDictionary(p => (p.GetCustomAttribute(typeof(DbItem)) as DbItem)!.Name,
                 p => $"'{p.GetValue(instance) ?? string.Empty}'");
         var query =
-            $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) output inserted.user_id " +
+            $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) output inserted.id " +
             $"values ({string.Join(", ", properties.Values)})";
         using var connection = new SqlConnection(_connectionString);
         connection.Open();
@@ -61,14 +61,27 @@ internal class DataBase
     public void Delete(int? id = null)
     {
         var query = $"delete from {_tableName}";
-        query += id is not null ? $"where Id={id}" : "";
+        query += id is not null ? $"where id={id}" : "";
         Execute(query);
     }
 
+    public void Update<T>(int id, T instance)
+    {
+        var changes = typeof(T)
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.GetCustomAttribute(typeof(DbItem)) is not null)
+            .Select(p =>
+                $"{(p.GetCustomAttribute(typeof(DbItem)) as DbItem)!.Name} = {p.GetCustomAttribute(typeof(DbItem)) as DbItem}'{(p.GetValue(instance)?.ToString() ?? string.Empty).Replace("'", "''")}'");
+
+        var sqlExpression = $"update {_tableName} set {string.Join(',', changes)} where id={id}";
+
+        Execute(sqlExpression);
+    }
+    
     public void Update(string field, string value, int? id = null)
     {
-        var query = $"update {_tableName} set {field}={value}";
-        query += id is not null ? $"where Id={id}" : "";
+        var query = $"update {_tableName} set {field}='{value}'";
+        query += id is not null ? $" where id={id}" : "";
         Execute(query);
     }
 

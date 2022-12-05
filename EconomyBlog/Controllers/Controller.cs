@@ -1,6 +1,7 @@
 using System.Net;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Structures;
+using static EconomyBlog.Messages;
 
 namespace EconomyBlog.Controllers;
 
@@ -13,7 +14,7 @@ public abstract class Controller
         if (Directory.Exists(filePath) && File.Exists(filePath + "/index.html"))
             buffer = File.ReadAllBytes(filePath + "/index.html");
         else if (!File.Exists(filePath))
-            return new ActionResult {StatusCode = HttpStatusCode.NotFound};
+            return new ErrorResult(FileOrDirectoryNotFound);
         else buffer = File.ReadAllBytes(filePath);
         return new ActionResult
         {

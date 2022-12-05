@@ -23,4 +23,6 @@ public class UserDao : IUserDao
     public void Remove(int? id = null) => _orm.Delete(id);
 
     public void Update(string field, string value, int? id = null) => _orm.Update(field, value, id);
+
+    public void Update(int id, User user) => _orm.Update(id, user);
 }

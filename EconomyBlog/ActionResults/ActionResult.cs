@@ -4,9 +4,9 @@ namespace EconomyBlog.ActionResults;
 
 public class ActionResult
 {
-    public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
-    public string ContentType { get; set; } = "text/html";
+    public HttpStatusCode StatusCode { get; init; } = HttpStatusCode.OK;
+    public string ContentType { get; init; } = "text/html";
     public byte[] Buffer { get; init; } = Array.Empty<byte>();
-    public string? RedirectUrl { get; set; }
-    public CookieCollection? Cookies { get; set; }
+    public string? RedirectUrl { get; init; }
+    public CookieCollection? Cookies { get; init; }
 }

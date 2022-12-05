@@ -7,5 +7,5 @@ namespace EconomyBlog.Controllers;
 public class PredictBitcoinPriceController : Controller
 {
     [HttpGET]
-    public static ActionResult GetPredictBitcoinPricePage(string path) => ProcessStatic("predict_bitcoin_price", path);
+    public static ActionResult GetPredictBitcoinPricePage(Guid sessionId, string path) => ProcessStatic("predict_bitcoin_price", path);
 }

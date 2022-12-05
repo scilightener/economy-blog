@@ -1,5 +1,6 @@
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
+using static EconomyBlog.Messages;
 
 namespace EconomyBlog.Controllers;
 
@@ -7,7 +8,7 @@ namespace EconomyBlog.Controllers;
 public class GlobalController : Controller
 {
     [HttpGET]
-    public static ActionResult GetGlobalCss(string path) => path.EndsWith("global.css")
+    public static ActionResult GetGlobalCss(Guid sessionId, string path) => path.EndsWith("global.css")
         ? ProcessStatic("global", path)
-        : new ActionResult();
+        : new ErrorResult(FileOrDirectoryNotFound);
 }

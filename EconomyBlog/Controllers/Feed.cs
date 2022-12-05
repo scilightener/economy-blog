@@ -7,5 +7,5 @@ namespace EconomyBlog.Controllers;
 public class FeedController : Controller
 {
     [HttpGET]
-    public static ActionResult GetFeedPage(string path) => ProcessStatic("feed", path);
+    public static ActionResult GetFeedPage(Guid sessionId, string path) => ProcessStatic("feed", path);
 }
