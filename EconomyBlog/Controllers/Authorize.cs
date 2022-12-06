@@ -16,7 +16,6 @@ public class AuthorizeController : Controller
     public static ActionResult LoginUser(Guid sessionId, string login, string password)
     {
         var dao = new UserDao();
-        Console.WriteLine(dao.GetAll().Count());
         User? user;
         try
         {
@@ -29,8 +28,7 @@ public class AuthorizeController : Controller
         }
 
         if (user is null)
-            // TODO: think of another ActionResult return
-            return new ActionResult();
+            return new UnauthorizedResult("There's no such a user. Please register.");
 
         
         var result = new ActionResult

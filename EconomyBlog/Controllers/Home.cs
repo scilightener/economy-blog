@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
+using EconomyBlog.Models;
 using EconomyBlog.ORM;
 using EconomyBlog.ServerLogic.SessionLogic;
 using static EconomyBlog.Messages;
@@ -22,12 +23,8 @@ public class HomeController : Controller
         var dao = new UserDao();
         try
         {
-            if (!string.IsNullOrEmpty(firstName)) dao.Update("first_name", firstName, userId);
-            if (!string.IsNullOrEmpty(lastName)) dao.Update("last_name", firstName, userId);
-            dao.Update("age", age.ToString(), userId);
-            if (!string.IsNullOrEmpty(education)) dao.Update("education", firstName, userId);
-            if (!string.IsNullOrEmpty(job)) dao.Update("job", firstName, userId);
-            dao.Update("risk_index", riskFactor.ToString(), userId);
+            // no need to update login & password, so they're null
+            dao.Update(userId, new User(userId, null, null, firstName, lastName, age, education, job, riskFactor));
         }
         catch (Exception e)
         {
@@ -44,7 +41,7 @@ public class HomeController : Controller
     [HttpGET(@"\d")]
     public static ActionResult GetUser(Guid sessionId, string path)
     {
-        if (!int.TryParse(path.Split('/')[^1], out var id))
+        if (!int.TryParse(path.Split('/')[^2], out var id))
             return new ErrorResult(UserNotFound);
         var userDao = new UserDao();
         var user = userDao.GetById(id);
@@ -56,5 +53,9 @@ public class HomeController : Controller
     }
     
     [HttpGET]
-    public static ActionResult GetHomePage(Guid sessionId, string path) => ProcessStatic("home", path);
+    public static ActionResult GetHomePage(Guid sessionId, string path)
+    {
+        
+        return ProcessStatic("home", path);
+    }
 }

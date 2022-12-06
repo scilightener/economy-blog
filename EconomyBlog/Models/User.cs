@@ -6,25 +6,25 @@ public class User
 {
     public int Id { get; }
     [DbItem("login")]
-    public string Login { get; }
+    public string? Login { get; }
     [DbItem("password")]
-    public string Password { get; }
+    public string? Password { get; }
     [DbItem("first_name")]
-    public string FirstName { get; }
+    public string? FirstName { get; }
     [DbItem("last_name")]
-    public string LastName { get; }
+    public string? LastName { get; }
     [DbItem("age")]
-    public int Age { get; }
+    public int? Age { get; }
     [DbItem("education")]
-    public string Education { get; }
+    public string? Education { get; }
     [DbItem("job")]
-    public string Job { get; }
+    public string? Job { get; }
     [DbItem("risk_index")]
-    public decimal RiskIndex { get; }
+    public int? RiskIndex { get; }
     // [DbItem("favorite_topics")]
     // public int FavoriteTopicsId { get; }
 
-    public User(int id, string login, string password, string firstName, string lastName, int age, string education, string job, decimal riskIndex/*, int favoriteTopicsId*/)
+    public User(int id, string? login, string? password, string? firstName, string? lastName, int? age, string? education, string? job, int? riskIndex/*, int favoriteTopicsId*/)
     {
         Id = id;
         Login = login;

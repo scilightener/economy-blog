@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.ServerLogic.SessionLogic;
+using static EconomyBlog.Messages;
 
 namespace EconomyBlog.ServerLogic;
 
@@ -14,7 +15,7 @@ internal static class ServerResponseProvider
     {
         var request = ctx.Request;
         var response = ctx.Response;
-        var buffer = Encoding.UTF8.GetBytes("Error 404. Not Found.");
+        var buffer = Encoding.UTF8.GetBytes(FileOrDirectoryNotFound);
         if (!Directory.Exists(path))
             buffer = Encoding.UTF8.GetBytes($"Directory {path} not found.");
         else if (TryHandleController(request, response))
@@ -82,10 +83,10 @@ internal static class ServerResponseProvider
     private static void HandleActionResult(HttpListenerResponse response, ActionResult result)
     {
         response.Headers.Set("Content-Type", result.ContentType);
+        if (result.StatusCode is HttpStatusCode.Redirect)
+            response.Redirect(result.RedirectUrl!);
         response.StatusCode = (int)result.StatusCode;
         if (result.Cookies != null) response.Cookies.Add(result.Cookies);
         response.OutputStream.Write(result.Buffer);
-        if (result.StatusCode is HttpStatusCode.Redirect)
-            response.Redirect(result.RedirectUrl!);
     }
 }

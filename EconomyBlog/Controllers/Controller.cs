@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Structures;
 using static EconomyBlog.Messages;
@@ -7,7 +8,7 @@ namespace EconomyBlog.Controllers;
 
 public abstract class Controller
 {
-    internal static ActionResult ProcessStatic(string controllerName, string path)
+    internal static ActionResult ProcessStatic(string controllerName, string path, object? model = null)
     {
         var filePath = $"./Views/{controllerName}/{path}";
         byte[] buffer;
@@ -20,7 +21,7 @@ public abstract class Controller
         {
             StatusCode = HttpStatusCode.OK,
             ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = buffer
+            Buffer = model is null ? buffer : Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model))
         };
     }
 }

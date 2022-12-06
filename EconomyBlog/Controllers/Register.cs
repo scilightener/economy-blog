@@ -19,7 +19,7 @@ public class RegisterController : Controller
         int id;
         try
         {
-            // check if login is already taken
+            // TODO: check if login is already taken
             id = dao.Insert(login, HttpUtility.UrlDecode(password));
         }
         catch
