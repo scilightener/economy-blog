@@ -19,8 +19,7 @@ public class AuthorizeController : Controller
         User? user;
         try
         {
-            user = dao.GetAll()
-                .FirstOrDefault(acc => acc.Login == login && acc.Password == HttpUtility.UrlDecode(password));
+            user = dao.GetByLoginPassword(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
         }
         catch
         {

@@ -1,3 +1,4 @@
+using System.Data.SqlClient;
 using System.Net;
 using System.Web;
 using EconomyBlog.ActionResults;
@@ -20,11 +21,13 @@ public class RegisterController : Controller
         try
         {
             // TODO: check if login is already taken
-            id = dao.Insert(login, HttpUtility.UrlDecode(password));
+            id = dao.Insert(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
         }
-        catch
+        catch (SqlException ex)
         {
-            return new ErrorResult(ServerFault);
+            return ex.Class == 14
+                ? new ErrorResult($"Login '{login}' is already taken. Consider another variant and try again.")
+                : new ErrorResult(ServerFault);
         }
         return new ActionResult
         {
