@@ -19,7 +19,7 @@ public class UserDao : IUserDao
     public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where id={id}").FirstOrDefault();
 
     public User? GetByLoginPassword(string login, string password) => _orm
-        .Select<User>($"select * from {TableName} where login={login} and password={password}").FirstOrDefault();
+        .Select<User>($"select * from {TableName} where login='{login}' and password='{password}'").FirstOrDefault();
 
     public int Insert(string login, string password) => _orm.Insert(new User(login, password));
 

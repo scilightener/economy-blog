@@ -7,4 +7,5 @@ public static class Messages
     internal const string UnauthorizedAccess = "Access denied. Please, authorize first.";
     internal const string FileOrDirectoryNotFound = "There is no such a file or directory.";
     internal const string UnknownError = "Unknown erroe. Please try again.";
+    internal const string DBError = "Database error. Please try again.";
 }

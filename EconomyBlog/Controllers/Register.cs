@@ -20,7 +20,6 @@ public class RegisterController : Controller
         int id;
         try
         {
-            // TODO: check if login is already taken
             id = dao.Insert(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
         }
         catch (SqlException ex)

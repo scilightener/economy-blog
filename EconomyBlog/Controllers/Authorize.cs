@@ -1,3 +1,4 @@
+using System.Data.SqlClient;
 using System.Net;
 using System.Web;
 using EconomyBlog.ActionResults;
@@ -21,13 +22,13 @@ public class AuthorizeController : Controller
         {
             user = dao.GetByLoginPassword(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
         }
-        catch
+        catch (SqlException ex)
         {
-            return new ErrorResult(ServerFault);
+            return new ErrorResult(DBError);
         }
 
         if (user is null)
-            return new UnauthorizedResult("There's no such a user. Please register.");
+            return new UnauthorizedResult(UserNotFound);
 
         
         var result = new ActionResult
