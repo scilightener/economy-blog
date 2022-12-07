@@ -66,8 +66,16 @@ internal static class ServerResponseProvider
                         : p.DefaultValue) ?? Array.Empty<object?>())
             .ToArray();
 
-        if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret) return false;
-        HandleActionResult(response, ret);
+        try
+        {
+            if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret) return false;
+            HandleActionResult(response, ret);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            HandleActionResult(response, new ErrorResult(ServerFault));
+        }
         return true;
     }
 

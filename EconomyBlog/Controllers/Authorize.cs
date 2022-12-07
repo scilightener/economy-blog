@@ -22,8 +22,9 @@ public class AuthorizeController : Controller
         {
             user = dao.GetByLoginPassword(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
         }
-        catch (SqlException ex)
+        catch (SqlException e)
         {
+            Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
 

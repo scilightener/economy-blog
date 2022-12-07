@@ -1,3 +1,4 @@
+using System.Data.SqlClient;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -13,7 +14,7 @@ namespace EconomyBlog.Controllers;
 [HttpController("home")]
 public class HomeController : Controller
 {
-    [HttpPOST("/edit")]
+    [HttpPOST("edit")]
     public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age, string education, string job,
         int riskFactor, string topic1 = "", string topic2 = "", string topic3 = "", string topic4 = "", string topic5 = "")
     {
@@ -26,10 +27,10 @@ public class HomeController : Controller
             // no need to update login & password, so they're null
             dao.Update(userId, new User(userId, null, null, firstName, lastName, age, education, job, riskFactor));
         }
-        catch (Exception e)
+        catch (SqlException e)
         {
             Console.WriteLine(e.Message);
-            return new ErrorResult(ServerFault);
+            return new ErrorResult(DbError);
         }
         return new ActionResult
         {
@@ -37,6 +38,8 @@ public class HomeController : Controller
             RedirectUrl = "../",
         };
     }
+    //
+    // [HttpGET("")]
 
     [HttpGET(@"\d")]
     public static ActionResult GetUser(Guid sessionId, string path)
@@ -55,7 +58,6 @@ public class HomeController : Controller
     [HttpGET]
     public static ActionResult GetHomePage(Guid sessionId, string path)
     {
-        
-        return ProcessStatic("home", path);
+        return ProcessStatic("home", path, new UserDao().GetById(SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1));
     }
 }

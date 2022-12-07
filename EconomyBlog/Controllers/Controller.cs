@@ -11,17 +11,19 @@ public abstract class Controller
     internal static ActionResult ProcessStatic(string controllerName, string path, object? model = null)
     {
         var filePath = $"./Views/{controllerName}/{path}";
-        byte[] buffer;
-        if (Directory.Exists(filePath) && File.Exists(filePath + "/index.html"))
-            buffer = File.ReadAllBytes(filePath + "/index.html");
+        var buffer = Array.Empty<byte>()
+        ;
+        if (Directory.Exists(filePath) && File.Exists(filePath + "/index.sbnhtml"))
+            filePath += "/index.sbnhtml";
         else if (!File.Exists(filePath))
             return new ErrorResult(FileOrDirectoryNotFound);
-        else buffer = File.ReadAllBytes(filePath);
+        else
+            buffer = File.ReadAllBytes(filePath);
         return new ActionResult
         {
             StatusCode = HttpStatusCode.OK,
             ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = model is null ? buffer : Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model))
+            Buffer = buffer.Length > 0 ? buffer : Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model))
         };
     }
 }

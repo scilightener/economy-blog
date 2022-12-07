@@ -16,7 +16,7 @@ public class UserDao
 
     public IEnumerable<User> GetAll() => _orm.Select<User>();
 
-    public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where id={id}").FirstOrDefault();
+    public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where id='{id}'").FirstOrDefault();
 
     public User? GetByLoginPassword(string login, string password) => _orm
         .Select<User>($"select * from {TableName} where login='{login}' and password='{password}'").FirstOrDefault();

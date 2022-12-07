@@ -12,7 +12,7 @@ public class ActionResult
     public string? RedirectUrl { get; init; }
     public CookieCollection? Cookies { get; init; }
 
-    internal static string GetHtml(string path, object model)
+    internal static string GetHtml(string path, object? model)
     {
         if (!File.Exists(path)) return FileOrDirectoryNotFound;
         var template = File.ReadAllText(path);

@@ -28,7 +28,7 @@ public class RegisterController : Controller
             {
                 14 => new ErrorResult($"Login '{login}' is already taken. Consider another variant and try again."),
                 16 => new ErrorResult($"Too long login. Only logins with maximum length 20 characters allowed."),
-                _ => new ErrorResult(ServerFault)
+                _ => new ErrorResult(DbError)
             };
         }
         return new ActionResult
