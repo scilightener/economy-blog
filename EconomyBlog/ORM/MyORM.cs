@@ -64,6 +64,12 @@ internal class DataBase
         Execute(query);
     }
 
+    public void DeleteWhere(string columnName, string value)
+    {
+        var query = $"delete from {_tableName} where {columnName}='{value}'";
+        Execute(query);
+    }
+
     public void Update<T>(int id, T instance)
     {
         var changes = typeof(T)

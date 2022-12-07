@@ -72,7 +72,7 @@ public class HttpServer : IDisposable
         {
             if (!_httpListener.IsListening)
                 return;
-            Console.WriteLine("An error occured. Try to start server again." + ex.Message);
+            Console.WriteLine("An error occured. Try to start server again. " + ex.Message);
             Stop();
         }
     }

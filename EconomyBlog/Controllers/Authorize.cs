@@ -14,7 +14,7 @@ namespace EconomyBlog.Controllers;
 public class AuthorizeController : Controller
 {
     [HttpPOST]
-    public static ActionResult LoginUser(Guid sessionId, string login, string password)
+    public static ActionResult LoginUser(Guid sessionId, string login, string password, string rememberMe="off")
     {
         var dao = new UserDao();
         User? user;
@@ -24,7 +24,7 @@ public class AuthorizeController : Controller
         }
         catch (SqlException ex)
         {
-            return new ErrorResult(DBError);
+            return new ErrorResult(DbError);
         }
 
         if (user is null)
@@ -37,9 +37,8 @@ public class AuthorizeController : Controller
             RedirectUrl = @"/feed/",
             Cookies = new CookieCollection
             {
-                new Cookie("SessionId", SessionManager.CreateSession(user.Id, login, DateTime.Now).ToString(), "/")
-                    // { Expires = rememberMe ? DateTime.Now.AddMonths(3) : DateTime.Now.AddHours(1)}
-                    { Expires = DateTime.Now.AddHours(1) }
+                new Cookie("SessionId", SessionManager.CreateSession(user.Id, login, DateTime.Now, rememberMe=="on").ToString(), "/")
+                    { Expires = rememberMe=="on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1)}
             }
         };
         return result;

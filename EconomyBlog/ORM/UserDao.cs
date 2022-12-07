@@ -2,7 +2,7 @@ using EconomyBlog.Models;
 
 namespace EconomyBlog.ORM;
 
-public class UserDao : IUserDao
+public class UserDao
 {
     private const string TableName = "[dbo].[Users]";
     private const string DbName = "dev_basics_sem1";

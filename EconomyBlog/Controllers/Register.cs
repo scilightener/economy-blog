@@ -14,7 +14,7 @@ namespace EconomyBlog.Controllers;
 public class RegisterController : Controller
 {
     [HttpPOST]
-    public static ActionResult RegisterUser(Guid sessionId, string login, string password/*, bool rememberMe = false*/)
+    public static ActionResult RegisterUser(Guid sessionId, string login, string password, string rememberMe="off")
     {
         var dao = new UserDao();
         int id;
@@ -24,9 +24,12 @@ public class RegisterController : Controller
         }
         catch (SqlException ex)
         {
-            return ex.Class == 14
-                ? new ErrorResult($"Login '{login}' is already taken. Consider another variant and try again.")
-                : new ErrorResult(ServerFault);
+            return ex.Class switch
+            {
+                14 => new ErrorResult($"Login '{login}' is already taken. Consider another variant and try again."),
+                16 => new ErrorResult($"Too long login. Only logins with maximum length 20 characters allowed."),
+                _ => new ErrorResult(ServerFault)
+            };
         }
         return new ActionResult
         {
@@ -34,9 +37,8 @@ public class RegisterController : Controller
             RedirectUrl = @"/home/edit/",
             Cookies = new CookieCollection
             {
-                new Cookie("SessionId", SessionManager.CreateSession(id, login, DateTime.Now).ToString(), "/")
-                    // { Expires = rememberMe ? DateTime.Now.AddMonths(3) : DateTime.Now.AddHours(1)}
-                    { Expires = DateTime.Now.AddHours(1) }
+                new Cookie("SessionId", SessionManager.CreateSession(id, login, DateTime.Now, rememberMe=="on").ToString(), "/")
+                    { Expires = rememberMe=="on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1)}
             }
         };
     }
