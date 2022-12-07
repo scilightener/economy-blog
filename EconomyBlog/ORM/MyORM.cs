@@ -45,7 +45,7 @@ internal class DataBase
     {
         var properties = typeof(T)
             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-            .Where(p => p.GetValue(instance) is not null && p.GetCustomAttribute(typeof(DbItem)) is not null)
+            .Where(p => /*p.GetValue(instance) is not null && */p.GetCustomAttribute(typeof(DbItem)) is not null)
             .ToDictionary(p => (p.GetCustomAttribute(typeof(DbItem)) as DbItem)!.Name,
                 p => $"'{p.GetValue(instance) ?? string.Empty}'");
         var query =

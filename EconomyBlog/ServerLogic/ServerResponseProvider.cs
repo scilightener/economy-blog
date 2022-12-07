@@ -2,6 +2,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.ServerLogic.SessionLogic;
@@ -38,7 +39,7 @@ internal static class ServerResponseProvider
 
         var path = string.Join("", request.Url.Segments.Skip(2));
         var strParams = request.HttpMethod == "POST"
-            ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).ToArray()
+            ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).Select(HttpUtility.UrlDecode).ToArray()
             : new[] { path };
         
         var controllerName = request.Url.Segments[1].Replace("/", "");
@@ -90,10 +91,10 @@ internal static class ServerResponseProvider
 
     private static void HandleActionResult(HttpListenerResponse response, ActionResult result)
     {
-        response.Headers.Set("Content-Type", result.ContentType);
         if (result.StatusCode is HttpStatusCode.Redirect)
             response.Redirect(result.RedirectUrl!);
         response.StatusCode = (int)result.StatusCode;
+        response.Headers.Set("Content-Type", result.ContentType);
         if (result.Cookies != null) response.Cookies.Add(result.Cookies);
         response.OutputStream.Write(result.Buffer);
     }

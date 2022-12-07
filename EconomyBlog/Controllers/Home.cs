@@ -18,9 +18,9 @@ public class HomeController : Controller
     public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age, string education, string job,
         int riskFactor, string topic1 = "", string topic2 = "", string topic3 = "", string topic4 = "", string topic5 = "")
     {
-        if (sessionId == Guid.Empty) return new UnauthorizedResult(UnauthorizedAccess);
+        if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var userId = SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1;
-        if (userId == -1) return new UnauthorizedResult(UnauthorizedAccess);
+        if (userId == -1) return new UnauthorizedResult();
         var dao = new UserDao();
         try
         {
@@ -38,13 +38,11 @@ public class HomeController : Controller
             RedirectUrl = "../",
         };
     }
-    //
-    // [HttpGET("")]
 
     [HttpGET(@"\d")]
     public static ActionResult GetUser(Guid sessionId, string path)
     {
-        if (!int.TryParse(path.Split('/')[^2], out var id))
+        if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
             return new ErrorResult(UserNotFound);
         var userDao = new UserDao();
         var user = userDao.GetById(id);
@@ -58,6 +56,9 @@ public class HomeController : Controller
     [HttpGET]
     public static ActionResult GetHomePage(Guid sessionId, string path)
     {
-        return ProcessStatic("home", path, new UserDao().GetById(SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1));
+        return sessionId == Guid.Empty
+            ? new UnauthorizedResult()
+            : ProcessStatic("home", path,
+                new UserDao().GetById(SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1));
     }
 }

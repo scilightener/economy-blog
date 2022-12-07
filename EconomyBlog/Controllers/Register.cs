@@ -20,7 +20,7 @@ public class RegisterController : Controller
         int id;
         try
         {
-            id = dao.Insert(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
+            id = dao.Insert(login, password);
         }
         catch (SqlException ex)
         {

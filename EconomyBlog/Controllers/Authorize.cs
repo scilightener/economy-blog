@@ -20,7 +20,7 @@ public class AuthorizeController : Controller
         User? user;
         try
         {
-            user = dao.GetByLoginPassword(HttpUtility.UrlDecode(login), HttpUtility.UrlDecode(password));
+            user = dao.GetByLoginPassword(login, password);
         }
         catch (SqlException e)
         {
