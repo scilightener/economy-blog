@@ -18,6 +18,9 @@ public class UserDao
 
     public User? GetById(int id) => _orm.Select<User>($"select * from {TableName} where id='{id}'").FirstOrDefault();
 
+    public User? GetByLogin(string login) =>
+        _orm.Select<User>($"select * from {TableName} where login='{login}'").FirstOrDefault();
+    
     public User? GetByLoginPassword(string login, string password) => _orm
         .Select<User>($"select * from {TableName} where login='{login}' and password='{password}'").FirstOrDefault();
 

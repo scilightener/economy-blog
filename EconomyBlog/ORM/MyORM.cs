@@ -47,7 +47,7 @@ internal class DataBase
             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
             .Where(p => /*p.GetValue(instance) is not null && */p.GetCustomAttribute(typeof(DbItem)) is not null)
             .ToDictionary(p => (p.GetCustomAttribute(typeof(DbItem)) as DbItem)!.Name,
-                p => $"'{p.GetValue(instance) ?? string.Empty}'");
+                p => $"'{(p.GetValue(instance)?.ToString() ?? string.Empty).Replace("'", "''")}'");
         var query =
             $"insert into {_tableName} ({string.Join(", ", properties.Keys)}) output inserted.id " +
             $"values ({string.Join(", ", properties.Values)})";

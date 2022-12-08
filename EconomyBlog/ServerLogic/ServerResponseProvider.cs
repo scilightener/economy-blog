@@ -1,6 +1,5 @@
 using System.Net;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using EconomyBlog.ActionResults;
@@ -16,12 +15,9 @@ internal static class ServerResponseProvider
     {
         var request = ctx.Request;
         var response = ctx.Response;
-        var buffer = Encoding.UTF8.GetBytes(FileOrDirectoryNotFound);
-        if (!Directory.Exists(path))
-            buffer = Encoding.UTF8.GetBytes($"Directory {path} not found.");
-        else if (TryHandleController(request, response))
+        if (TryHandleController(request, response))
             return response;
-        response.OutputStream.Write(buffer);
+        HandleActionResult(response, new ErrorResult(FileOrDirectoryNotFound));
         return response;
     }
     
@@ -51,10 +47,11 @@ internal static class ServerResponseProvider
                 controllerName,
                 StringComparison.CurrentCultureIgnoreCase));
 
+        var methodString = string.Concat(request.Url.Segments.Skip(2));
         var method = controller?.GetMethods()
             .FirstOrDefault(t => t.GetCustomAttributes(true)
                 .Any(attr => attr.GetType().Name == $"Http{request.HttpMethod}"
-                    && Regex.IsMatch(request.RawUrl ?? "",
+                    && Regex.IsMatch(methodString,
                         attr.GetType()
                         .GetField("MethodUri")?
                         .GetValue(attr)?.ToString() ?? "")));

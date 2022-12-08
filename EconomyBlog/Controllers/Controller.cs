@@ -11,8 +11,7 @@ public abstract class Controller
     internal static ActionResult ProcessStatic(string controllerName, string path, object? model = null)
     {
         var filePath = $"./Views/{controllerName}/{path}";
-        var buffer = Array.Empty<byte>()
-        ;
+        var buffer = Array.Empty<byte>();
         if (Directory.Exists(filePath) && File.Exists(filePath + "/index.sbnhtml"))
             filePath += "/index.sbnhtml";
         else if (!File.Exists(filePath))
