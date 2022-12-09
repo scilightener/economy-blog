@@ -11,15 +11,9 @@ public class Post
     [DbItem("publication_date")] public string SqlDateTime => Date.ToString("yyyy-MM-dd HH:mm:ss");
 
     public readonly DateTime Date;
-    
-    public Post(int id, string title, string text, string author, DateTime date)
-    {
+
+    public Post(int id, string title, string text, string author, DateTime date) : this(title, text, author, date) =>
         Id = id;
-        Title = title;
-        Text = text;
-        Author = author;
-        Date = date;
-    }
 
     public Post(string title, string text, string author, DateTime date)
     {

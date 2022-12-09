@@ -40,12 +40,29 @@ public class HomeController : Controller
     }
 
     [HttpGET("^edit/$")]
-    public static ActionResult GetEditPage(Guid sessionId, string path) => GetHomePage(sessionId, path);
+    public static ActionResult GetEditPage(Guid sessionId, string path)
+    {
+        if (sessionId == Guid.Empty)
+            return new UnauthorizedResult();
+        IEnumerable<Topic>? topics = null;
+        try
+        {
+            topics = new TopicsDao().GetAll();
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine(e.Message);
+            //return new ErrorResult(DbError);
+        }
+        return ProcessStatic("home", path, new {Topics = topics?.OrderBy(topic => topic.Name)});
+    }
 
     [HttpGET(@"^\d+/$")]
     public static ActionResult GetUser(Guid sessionId, string path)
     {
-        if (sessionId == Guid.Empty || !int.TryParse(path.Split('/', StringSplitOptions.RemoveEmptyEntries)[^1], out var id))
+        if (sessionId == Guid.Empty)
+            return new UnauthorizedResult();
+        if (!int.TryParse(path.Split('/', StringSplitOptions.RemoveEmptyEntries)[^1], out var id))
             return new ErrorResult(UserNotFound);
         var userDao = new UserDao();
         User? user;
@@ -71,7 +88,7 @@ public class HomeController : Controller
     public static ActionResult GetUserByLogin(Guid sessionId, string path)
     {
         if (sessionId == Guid.Empty)
-            return new ErrorResult(UserNotFound);
+            return new UnauthorizedResult();
         var login = path.Split('/', StringSplitOptions.RemoveEmptyEntries)[^1];
         var userDao = new UserDao();
         User? user;

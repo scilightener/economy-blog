@@ -14,7 +14,7 @@ namespace EconomyBlog.Controllers;
 [HttpController("feed")]
 public class FeedController : Controller
 {
-    [HttpPOST("edit")]
+    [HttpPOST("^edit/$")]
     public static ActionResult CreateNewPost(Guid sessionId, string title, string text)
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
@@ -38,7 +38,7 @@ public class FeedController : Controller
         };
     }
 
-    [HttpGET(@"\d")]
+    [HttpGET(@"^\d+/$")]
     public static ActionResult GetPost(Guid sessionId, string path)
     {
         if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
@@ -62,7 +62,7 @@ public class FeedController : Controller
         };
     }
     
-    [HttpGET("edit")]
+    [HttpGET("^edit/$")]
     public static ActionResult GetNewPostPage(Guid sessionId, string path) =>
         sessionId == Guid.Empty ? new UnauthorizedResult() : ProcessStatic("feed", path);
 
@@ -70,7 +70,7 @@ public class FeedController : Controller
     public static ActionResult GetFeedPage(Guid sessionId, string path)
     {
         var dao = new PostDao();
-        IEnumerable<Post> posts;
+        IEnumerable<Post>? posts;
         try
         {
             posts = dao.GetAll();
@@ -80,6 +80,6 @@ public class FeedController : Controller
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
-        return ProcessStatic("feed", path, new{ Posts = posts });
+        return ProcessStatic("feed", path, new{ Posts = posts.OrderByDescending(post => post.Date) });
     }
 }

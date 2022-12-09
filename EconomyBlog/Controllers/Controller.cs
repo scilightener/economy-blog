@@ -12,8 +12,8 @@ public abstract class Controller
     {
         var filePath = $"./Views/{controllerName}/{path}";
         var buffer = Array.Empty<byte>();
-        if (Directory.Exists(filePath) && File.Exists(filePath + "/index.sbnhtml"))
-            filePath += "/index.sbnhtml";
+        if (Directory.Exists(filePath) && File.Exists(filePath + "/index.html"))
+            filePath += "/index.html";
         else if (!File.Exists(filePath))
             return new ErrorResult(FileOrDirectoryNotFound);
         else
@@ -22,7 +22,7 @@ public abstract class Controller
         {
             StatusCode = HttpStatusCode.OK,
             ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = buffer.Length > 0 ? buffer : Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model))
+            Buffer = filePath.EndsWith("index.html") ? Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model)) : buffer
         };
     }
 }
