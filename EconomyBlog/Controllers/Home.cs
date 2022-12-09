@@ -1,7 +1,5 @@
 using System.Data.SqlClient;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.Models;
@@ -16,16 +14,17 @@ public class HomeController : Controller
 {
     [HttpPOST("^edit/$")]
     public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age, string education, string job,
-        int riskFactor, string topic1 = "", string topic2 = "", string topic3 = "", string topic4 = "", string topic5 = "")
+        int riskFactor, int topic1 = 0, int topic2 = 0, int topic3 = 0, int topic4 = 0, int topic5 = 0)
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var userId = SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1;
         if (userId == -1) return new UnauthorizedResult();
-        var dao = new UserDao();
         try
         {
             // no need to update login & password, so they're null
-            dao.Update(userId, new User(userId, null, null, firstName, lastName, age, education, job, riskFactor));
+            new UserDao().Update(userId,
+                new User(userId, null, null, firstName, lastName, age, education, job, riskFactor, userId));
+            new UsersFavoriteTopicsDao().Update(new UsersFavoriteTopics(userId, topic1, topic2, topic3, topic4, topic5));
         }
         catch (SqlException e)
         {
@@ -47,14 +46,15 @@ public class HomeController : Controller
         IEnumerable<Topic>? topics = null;
         try
         {
-            topics = new TopicsDao().GetAll();
+            topics = new TopicsDao().GetAll().Skip(1);
         }
         catch (SqlException e)
         {
             Console.WriteLine(e.Message);
             //return new ErrorResult(DbError);
         }
-        return ProcessStatic("home", path, new {Topics = topics?.OrderBy(topic => topic.Name)});
+
+        return ProcessStatic("home", path, new { Topics = topics?.OrderBy(topic => topic.Name) });
     }
 
     [HttpGET(@"^\d+/$")]
@@ -64,11 +64,10 @@ public class HomeController : Controller
             return new UnauthorizedResult();
         if (!int.TryParse(path.Split('/', StringSplitOptions.RemoveEmptyEntries)[^1], out var id))
             return new ErrorResult(UserNotFound);
-        var userDao = new UserDao();
         User? user;
         try
         {
-            user = userDao.GetById(id);
+            user = new UserDao().GetById(id);
         }
         catch (SqlException e)
         {
@@ -76,12 +75,7 @@ public class HomeController : Controller
             return new ErrorResult(DbError);
         }
 
-        if (user is null) return new ErrorResult(UserNotFound);
-        return new ActionResult
-        {
-            ContentType = "application/json",
-            Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(user))
-        };
+        return user is null ? new ErrorResult(UserNotFound) : ProcessStatic("home", "", user);
     }
 
     [HttpGET(@"^\w+/$")]
@@ -90,23 +84,17 @@ public class HomeController : Controller
         if (sessionId == Guid.Empty)
             return new UnauthorizedResult();
         var login = path.Split('/', StringSplitOptions.RemoveEmptyEntries)[^1];
-        var userDao = new UserDao();
         User? user;
         try
         {
-            user = userDao.GetByLogin(login);
+            user = new UserDao().GetByLogin(login);
         }
         catch (SqlException e)
         {
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
-        if (user is null) return new ErrorResult(UserNotFound);
-        return new ActionResult
-        {
-            ContentType = "application/json",
-            Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(user))
-        };
+        return user is null ? new ErrorResult(UserNotFound) : ProcessStatic("home", "", user);
     }
     
     [HttpGET]

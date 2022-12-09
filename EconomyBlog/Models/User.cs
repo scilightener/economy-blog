@@ -1,4 +1,6 @@
+using System.Data.SqlClient;
 using EconomyBlog.Attributes;
+using EconomyBlog.ORM;
 
 namespace EconomyBlog.Models;
 
@@ -21,10 +23,12 @@ public class User
     public string? Job { get; }
     [DbItem("risk_index")]
     public int? RiskIndex { get; }
-    // [DbItem("favorite_topics")]
-    // public int FavoriteTopicsId { get; }
+    [DbItem("favorite_topics")]
+    public int FavoriteTopicsId { get; }
 
-    public User(int id, string? login, string? password, string? firstName, string? lastName, int? age, string? education, string? job, int? riskIndex/*, int favoriteTopicsId*/)
+    public List<Topic> FavoriteTopics;
+
+    public User(int id, string? login, string? password, string? firstName, string? lastName, int? age, string? education, string? job, int? riskIndex, int favoriteTopicsId)
     {
         Id = id;
         Login = login;
@@ -35,7 +39,18 @@ public class User
         Education = education;
         Job = job;
         RiskIndex = riskIndex;
-        // FavoriteTopicsId = favoriteTopicsId;
+        FavoriteTopicsId = favoriteTopicsId;
+
+        try
+        {
+            FavoriteTopics = new UsersFavoriteTopicsDao().GetById(favoriteTopicsId)?.FavoriteTopics ??
+                             new List<Topic>();
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
     }
 
     public User(string login, string password)

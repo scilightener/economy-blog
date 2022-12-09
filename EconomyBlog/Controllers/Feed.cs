@@ -1,7 +1,5 @@
 using System.Data.SqlClient;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.Models;
@@ -37,30 +35,30 @@ public class FeedController : Controller
             RedirectUrl = "../"
         };
     }
-
-    [HttpGET(@"^\d+/$")]
-    public static ActionResult GetPost(Guid sessionId, string path)
-    {
-        if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
-            return new ErrorResult(PostNotFound);
-        var postDao = new PostDao();
-        Post? post;
-        try
-        {
-            post = postDao.GetById(id);
-        }
-        catch (SqlException e)
-        {
-            Console.WriteLine(e.Message);
-            return new ErrorResult(DbError);
-        }
-        if (post is null) return new ErrorResult(PostNotFound);
-        return new ActionResult
-        {
-            ContentType = "application/json",
-            Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(post))
-        };
-    }
+    //
+    // [HttpGET(@"^\d+/$")]
+    // public static ActionResult GetPost(Guid sessionId, string path)
+    // {
+    //     if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
+    //         return new ErrorResult(PostNotFound);
+    //     var postDao = new PostDao();
+    //     Post? post;
+    //     try
+    //     {
+    //         post = postDao.GetById(id);
+    //     }
+    //     catch (SqlException e)
+    //     {
+    //         Console.WriteLine(e.Message);
+    //         return new ErrorResult(DbError);
+    //     }
+    //     if (post is null) return new ErrorResult(PostNotFound);
+    //     return new ActionResult
+    //     {
+    //         ContentType = "application/json",
+    //         Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(post))
+    //     };
+    // }
     
     [HttpGET("^edit/$")]
     public static ActionResult GetNewPostPage(Guid sessionId, string path) =>

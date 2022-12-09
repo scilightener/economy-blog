@@ -24,7 +24,7 @@ public class NewsController : Controller
         var dao = new NewsDao();
         try
         {
-            dao.Insert(new News(title, text, DateTime.Now, topic1+1, topic2+1, topic3+1));
+            dao.Insert(new News(title, text, DateTime.Now, topic1, topic2, topic3));
         }
         catch (SqlException ex)
         {
@@ -38,30 +38,30 @@ public class NewsController : Controller
             RedirectUrl = "../"
         };
     }
-
-    [HttpGET(@"^\d+/$")]
-    public static ActionResult GetPost(Guid sessionId, string path)
-    {
-        if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
-            return new ErrorResult(PostNotFound);
-        var dao = new NewsDao();
-        News? news;
-        try
-        {
-            news = dao.GetById(id);
-        }
-        catch (SqlException e)
-        {
-            Console.WriteLine(e.Message);
-            return new ErrorResult(DbError);
-        }
-        if (news is null) return new ErrorResult(PostNotFound);
-        return new ActionResult
-        {
-            ContentType = "application/json",
-            Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(news))
-        };
-    }
+    //
+    // [HttpGET(@"^\d+/$")]
+    // public static ActionResult GetPost(Guid sessionId, string path)
+    // {
+    //     if (sessionId == Guid.Empty || !int.TryParse(path.Split('/')[^2], out var id))
+    //         return new ErrorResult(PostNotFound);
+    //     var dao = new NewsDao();
+    //     News? news;
+    //     try
+    //     {
+    //         news = dao.GetById(id);
+    //     }
+    //     catch (SqlException e)
+    //     {
+    //         Console.WriteLine(e.Message);
+    //         return new ErrorResult(DbError);
+    //     }
+    //     if (news is null) return new ErrorResult(PostNotFound);
+    //     return new ActionResult
+    //     {
+    //         ContentType = "application/json",
+    //         Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(news))
+    //     };
+    // }
     
     [HttpGET("^edit/$")]
     public static ActionResult GetNewPostPage(Guid sessionId, string path)
@@ -74,14 +74,14 @@ public class NewsController : Controller
         IEnumerable<Topic>? topics;
         try
         {
-            topics = new TopicsDao().GetAll();
+            topics = new TopicsDao().GetAll().Skip(1);
         }
         catch (SqlException e)
         {
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
-        return ProcessStatic("news", path, new { Topics = topics });
+        return ProcessStatic("news", path, new { Topics = topics.OrderBy(topic => topic.Name) });
     }
 
     [HttpGET]
