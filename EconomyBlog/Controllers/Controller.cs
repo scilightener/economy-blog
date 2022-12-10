@@ -22,7 +22,7 @@ public abstract class Controller
         {
             StatusCode = HttpStatusCode.OK,
             ContentType = ContentTypeProvider.GetContentType(path),
-            Buffer = filePath.EndsWith("index.html") ? Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model)) : buffer
+            Buffer = filePath.EndsWith(".html") ? Encoding.UTF8.GetBytes(ActionResult.GetHtml(filePath, model)) : buffer
         };
     }
 }

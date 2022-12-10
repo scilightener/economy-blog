@@ -19,5 +19,6 @@ public class UsersFavoriteTopicsDao
 
     public void Delete(UsersFavoriteTopics usersFavoriteTopics) => _orm.Delete(usersFavoriteTopics.Id);
 
-    public void Update(UsersFavoriteTopics usersFavoriteTopics) => _orm.Update(usersFavoriteTopics.Id, usersFavoriteTopics);
+    public void Update(UsersFavoriteTopics usersFavoriteTopics) =>
+        _orm.Update(usersFavoriteTopics.Id, usersFavoriteTopics);
 }

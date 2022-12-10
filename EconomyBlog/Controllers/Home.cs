@@ -12,6 +12,7 @@ namespace EconomyBlog.Controllers;
 [HttpController("home")]
 public class HomeController : Controller
 {
+    // TODO: change topics to strings and fix their correct work
     [HttpPOST("^edit/$")]
     public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age, string education, string job,
         int riskFactor, int topic1 = 0, int topic2 = 0, int topic3 = 0, int topic4 = 0, int topic5 = 0)
