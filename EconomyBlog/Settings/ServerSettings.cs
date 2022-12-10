@@ -1,4 +1,4 @@
-namespace EconomyBlog;
+namespace EconomyBlog.Settings;
 
 public class ServerSettings
 {
