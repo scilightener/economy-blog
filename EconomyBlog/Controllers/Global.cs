@@ -1,7 +1,3 @@
-using EconomyBlog.ActionResults;
-using EconomyBlog.Attributes;
-using static EconomyBlog.Messages;
-
 namespace EconomyBlog.Controllers;
 
 [HttpController("global")]

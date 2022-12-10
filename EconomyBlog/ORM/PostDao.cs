@@ -1,5 +1,3 @@
-using EconomyBlog.Models;
-
 namespace EconomyBlog.ORM;
 
 public class PostDao
@@ -17,4 +15,6 @@ public class PostDao
     public int Insert(Post post) => _orm.Insert(post);
 
     public void Delete(Post post) => _orm.Delete(post.Id);
+
+    public void Update(int id, Post post) => _orm.Update(id, post);
 }

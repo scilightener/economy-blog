@@ -1,5 +1,3 @@
-using EconomyBlog.Attributes;
-
 namespace EconomyBlog.Models;
 
 public class Topic

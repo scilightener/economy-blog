@@ -1,4 +1,4 @@
-namespace EconomyBlog;
+namespace EconomyBlog.Settings;
 
 public static class Messages
 {
@@ -10,4 +10,6 @@ public static class Messages
     internal const string DbError = "Database error. Please try again.";
     internal const string PostNotFound = "Post not found.";
     internal const string NotAnAdmin = "This action is allowed for admins only.";
+    internal const string AnotherUsersPostAccessFail =
+        "You can not edit this post because you're not the author of this post.";
 }

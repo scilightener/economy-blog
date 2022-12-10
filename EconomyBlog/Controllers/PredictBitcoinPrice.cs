@@ -1,6 +1,3 @@
-using EconomyBlog.ActionResults;
-using EconomyBlog.Attributes;
-
 namespace EconomyBlog.Controllers;
 
 [HttpController("predict_bitcoin_price")]

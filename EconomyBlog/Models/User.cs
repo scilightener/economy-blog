@@ -1,7 +1,3 @@
-using System.Data.SqlClient;
-using EconomyBlog.Attributes;
-using EconomyBlog.ORM;
-
 namespace EconomyBlog.Models;
 
 public class User

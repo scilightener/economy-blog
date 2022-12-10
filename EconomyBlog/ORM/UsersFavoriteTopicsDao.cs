@@ -1,5 +1,3 @@
-using EconomyBlog.Models;
-
 namespace EconomyBlog.ORM;
 
 public class UsersFavoriteTopicsDao

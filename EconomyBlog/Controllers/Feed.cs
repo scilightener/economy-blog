@@ -1,27 +1,67 @@
-using System.Data.SqlClient;
-using System.Net;
-using EconomyBlog.ActionResults;
-using EconomyBlog.Attributes;
-using EconomyBlog.Models;
-using EconomyBlog.ORM;
-using EconomyBlog.ServerLogic.SessionLogic;
-using static EconomyBlog.Messages;
+using EconomyBlog.Services;
 
 namespace EconomyBlog.Controllers;
 
 [HttpController("feed")]
 public class FeedController : Controller
 {
+    [HttpGET(@"^edit/\d+/$")]
+    public static ActionResult GetEditPostPage(Guid sessionId, string path)
+    {
+        if (!int.TryParse(path.Split('/')[^2], out var postId))
+            return new ErrorResult(PostNotFound);
+        if (sessionId == Guid.Empty) return new UnauthorizedResult();
+        var session = SessionManager.GetSessionInfo(sessionId);
+        if (session is null) return new UnauthorizedResult();
+        Post? post;
+        try
+        {
+            post = new PostDao().GetById(postId);
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine(e.Message);
+            return new ErrorResult(DbError);
+        }
+
+        if (post is null) return new ErrorResult(PostNotFound);
+        return session.Login != post.Author
+            ? new UnauthorizedResult(AnotherUsersPostAccessFail)
+            : ProcessStatic("feed", "edit_post.html", new { Post = post, Login = session.Login });
+    }
+
+    [HttpPOST(@"^edit/\d+/$")]
+    public static ActionResult UpdatePost(Guid sessionId, string title, string text, int postId)
+    {
+        if (sessionId == Guid.Empty) return new UnauthorizedResult();
+        var session = SessionManager.GetSessionInfo(sessionId);
+        if (session is null) return new UnauthorizedResult();
+        try
+        {
+            new PostDao().Update(postId, new Post(title, text, session.Login, DateTime.Now));
+        }
+        catch (SqlException e)
+        {
+            Console.WriteLine(e.Message);
+            return new ErrorResult(DbError);
+        }
+
+        return new ActionResult
+        {
+            StatusCode = HttpStatusCode.Redirect,
+            RedirectUrl = "/feed/"
+        };
+    }
+    
     [HttpPOST("^create/$")]
     public static ActionResult CreateNewPost(Guid sessionId, string title, string text)
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var session = SessionManager.GetSessionInfo(sessionId);
         if (session is null) return new UnauthorizedResult();
-        var dao = new PostDao();
         try
         {
-            dao.Insert(new Post(title, text, session.Login, DateTime.Now));
+            new PostDao().Insert(new Post(title, text, session.Login, DateTime.Now));
         }
         catch (SqlException ex)
         {
@@ -67,11 +107,10 @@ public class FeedController : Controller
     [HttpGET]
     public static ActionResult GetFeedPage(Guid sessionId, string path)
     {
-        var dao = new PostDao();
         IEnumerable<Post>? posts;
         try
         {
-            posts = dao.GetAll();
+            posts = new PostDao().GetAll();
         }
         catch (SqlException e)
         {
@@ -79,6 +118,11 @@ public class FeedController : Controller
             return new ErrorResult(DbError);
         }
 
-        return ProcessStatic("feed", path, new { Posts = posts.OrderByDescending(post => post.Date) });
+        return ProcessStatic("feed", path,
+            new
+            {
+                Posts = posts.OrderByDescending(post => post.Date),
+                Login = SessionManager.GetSessionInfo(sessionId)?.Login
+            });
     }
 }

@@ -1,6 +1,4 @@
-using System.Net;
 using Scriban;
-using static EconomyBlog.Messages;
 
 namespace EconomyBlog.ActionResults;
 

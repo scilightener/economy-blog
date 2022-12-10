@@ -1,7 +1,5 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
 using System.Reflection;
-using EconomyBlog.Attributes;
 
 namespace EconomyBlog.ORM;
 

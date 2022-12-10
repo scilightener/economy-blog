@@ -1,8 +1,6 @@
-using EconomyBlog.Models;
-using EconomyBlog.ORM;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace EconomyBlog.ServerLogic.SessionLogic;
+namespace EconomyBlog.Services;
 
 public static class SessionManager
 {

@@ -1,11 +1,4 @@
-using System.Data.SqlClient;
-using System.Net;
-using EconomyBlog.ActionResults;
-using EconomyBlog.Attributes;
-using EconomyBlog.Models;
-using EconomyBlog.ORM;
-using EconomyBlog.ServerLogic.SessionLogic;
-using static EconomyBlog.Messages;
+using EconomyBlog.Services;
 
 namespace EconomyBlog.Controllers;
 
@@ -19,7 +12,7 @@ public class NewsController : Controller
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var session = SessionManager.GetSessionInfo(sessionId);
         if (session is null) return new UnauthorizedResult();
-        if (session.Login != "scilightener") return new UnauthorizedResult(NotAnAdmin);
+        if (!Admins.Logins.Contains(session.Login)) return new UnauthorizedResult(NotAnAdmin);
         var dao = new NewsDao();
         try
         {
