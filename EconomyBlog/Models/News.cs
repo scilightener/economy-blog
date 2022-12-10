@@ -16,7 +16,7 @@ public class News
 
     public readonly DateTime Date;
     public readonly List<Topic> Topics = new();
-    
+
     // TODO: do smth with the case in which not exactly 3 topics were selected
     public News(int id, string title, string text, DateTime date, int topic1, int topic2, int topic3) : this(title,
         text, date, topic1, topic2, topic3) => Id = id;

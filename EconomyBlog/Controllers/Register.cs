@@ -14,13 +14,13 @@ namespace EconomyBlog.Controllers;
 public class RegisterController : Controller
 {
     [HttpPOST]
-    public static ActionResult RegisterUser(Guid sessionId, string login, string password, string rememberMe="off")
+    public static ActionResult RegisterUser(Guid sessionId, string login, string password, string rememberMe = "off")
     {
         var dao = new UserDao();
         int id;
         try
         {
-            id = dao.Insert(login, password);
+            id = dao.Insert(login, Hashing.Hash(password));
         }
         catch (SqlException ex)
         {
@@ -31,14 +31,16 @@ public class RegisterController : Controller
                 _ => new ErrorResult(DbError)
             };
         }
+
         return new ActionResult
         {
             StatusCode = HttpStatusCode.Redirect,
             RedirectUrl = @"/home/edit/",
             Cookies = new CookieCollection
             {
-                new Cookie("SessionId", SessionManager.CreateSession(id, login, DateTime.Now, rememberMe=="on").ToString(), "/")
-                    { Expires = rememberMe=="on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1)}
+                new Cookie("SessionId",
+                        SessionManager.CreateSession(id, login, DateTime.Now, rememberMe == "on").ToString(), "/")
+                    { Expires = rememberMe == "on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1) }
             }
         };
     }

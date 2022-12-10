@@ -8,7 +8,7 @@ public static class SessionManager
 {
     private static readonly MemoryCache Cache = new(new MemoryCacheOptions());
 
-    public static Guid CreateSession(int userId, string login, DateTime created, bool rememberMe=false)
+    public static Guid CreateSession(int userId, string login, DateTime created, bool rememberMe = false)
     {
         var session = new Session(Guid.NewGuid(), userId, login, created);
         var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));
@@ -20,7 +20,8 @@ public static class SessionManager
     public static bool CheckSession(Guid id)
     {
         var session = new SessionDao().Select(id);
-        return Cache.TryGetValue(id, out _) || session is not null && (DateTime.Now - session.CreateDateTime).Days < 150;
+        return Cache.TryGetValue(id, out _) ||
+               session is not null && (DateTime.Now - session.CreateDateTime).Days < 150;
     }
 
     public static Session? GetSessionInfo(Guid id) =>

@@ -3,7 +3,7 @@
 internal static class Program
 {
     private static bool _isRunning;
-    
+
     public static void Main(string[] args)
     {
         using var server = new ServerLogic.HttpServer();
@@ -21,24 +21,24 @@ internal static class Program
             case "status":
                 Console.WriteLine(server.Status);
                 break;
-            
+
             case "start":
                 server.Start();
                 break;
-            
+
             case "stop":
                 server.Stop();
                 break;
-            
+
             case "restart":
                 server.Stop();
                 server.Start();
                 break;
-            
+
             case "exit":
                 _isRunning = false;
                 break;
-            
+
             default:
                 Console.WriteLine("Can't recognize. Try again.");
                 break;

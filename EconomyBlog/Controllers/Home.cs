@@ -14,7 +14,8 @@ public class HomeController : Controller
 {
     // TODO: change topics to strings and fix their correct work
     [HttpPOST("^edit/$")]
-    public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age, string education, string job,
+    public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age,
+        string education, string job,
         int riskFactor, int topic1 = 0, int topic2 = 0, int topic3 = 0, int topic4 = 0, int topic5 = 0)
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
@@ -25,13 +26,15 @@ public class HomeController : Controller
             // no need to update login & password, so they're null
             new UserDao().Update(userId,
                 new User(userId, null, null, firstName, lastName, age, education, job, riskFactor, userId));
-            new UsersFavoriteTopicsDao().Update(new UsersFavoriteTopics(userId, topic1, topic2, topic3, topic4, topic5));
+            new UsersFavoriteTopicsDao().Update(new UsersFavoriteTopics(userId, topic1, topic2, topic3, topic4,
+                topic5));
         }
         catch (SqlException e)
         {
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
+
         return new ActionResult
         {
             StatusCode = HttpStatusCode.Redirect,
@@ -95,9 +98,10 @@ public class HomeController : Controller
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
+
         return user is null ? new ErrorResult(UserNotFound) : ProcessStatic("home", "", user);
     }
-    
+
     [HttpGET]
     public static ActionResult GetHomePage(Guid sessionId, string path)
     {
@@ -113,6 +117,7 @@ public class HomeController : Controller
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
+
         return ProcessStatic("home", path, user);
     }
 }

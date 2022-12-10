@@ -82,7 +82,7 @@ internal class DataBase
 
         Execute(sqlExpression);
     }
-    
+
     public void Update(string field, string value, int? id = null)
     {
         var query = $"update {_tableName} set {field}='{value}'";

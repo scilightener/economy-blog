@@ -59,7 +59,7 @@ public class FeedController : Controller
     //         Buffer = Encoding.ASCII.GetBytes(JsonSerializer.Serialize(post))
     //     };
     // }
-    
+
     [HttpGET("^edit/$")]
     public static ActionResult GetNewPostPage(Guid sessionId, string path) =>
         sessionId == Guid.Empty ? new UnauthorizedResult() : ProcessStatic("feed", path);
@@ -78,6 +78,7 @@ public class FeedController : Controller
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
-        return ProcessStatic("feed", path, new{ Posts = posts.OrderByDescending(post => post.Date) });
+
+        return ProcessStatic("feed", path, new { Posts = posts.OrderByDescending(post => post.Date) });
     }
 }

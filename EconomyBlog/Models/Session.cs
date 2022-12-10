@@ -14,7 +14,9 @@ public class Session
 
 
     public Session(string guidString, int userId, string login, DateTime created) : this(
-        Guid.TryParse(guidString, out var parsed) ? parsed : Guid.Empty, userId, login, created) { }
+        Guid.TryParse(guidString, out var parsed) ? parsed : Guid.Empty, userId, login, created)
+    {
+    }
 
     public Session(Guid guid, int userId, string login, DateTime created)
     {

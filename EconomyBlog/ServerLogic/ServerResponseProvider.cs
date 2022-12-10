@@ -20,7 +20,7 @@ internal static class ServerResponseProvider
         HandleActionResult(response, new ErrorResult(FileOrDirectoryNotFound));
         return response;
     }
-    
+
     private static bool TryHandleController(HttpListenerRequest request, HttpListenerResponse response)
     {
         if (request.Url!.Segments.Length < 2) return false;
@@ -37,7 +37,7 @@ internal static class ServerResponseProvider
         var strParams = request.HttpMethod == "POST"
             ? bodyParam.Split('&').Select(p => p.Split('=').LastOrDefault()).Select(HttpUtility.UrlDecode).ToArray()
             : new[] { path };
-        
+
         var controllerName = request.Url.Segments[1].Replace("/", "");
         var assembly = Assembly.GetExecutingAssembly();
         var controller = assembly.GetTypes()
@@ -51,10 +51,10 @@ internal static class ServerResponseProvider
         var method = controller?.GetMethods()
             .FirstOrDefault(t => t.GetCustomAttributes(true)
                 .Any(attr => attr.GetType().Name == $"Http{request.HttpMethod}"
-                    && Regex.IsMatch(methodString,
-                        attr.GetType()
-                        .GetField("MethodUri")?
-                        .GetValue(attr)?.ToString() ?? "")));
+                             && Regex.IsMatch(methodString,
+                                 attr.GetType()
+                                     .GetField("MethodUri")?
+                                     .GetValue(attr)?.ToString() ?? "")));
 
         var queryParams = new object[] { GetSessionGuid(request) }.Concat(
                 method?.GetParameters()
@@ -66,7 +66,8 @@ internal static class ServerResponseProvider
 
         try
         {
-            if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret) return false;
+            if (method?.Invoke(Activator.CreateInstance(controller!), queryParams) is not ActionResult ret)
+                return false;
             HandleActionResult(response, ret);
         }
         catch (Exception ex)
@@ -74,6 +75,7 @@ internal static class ServerResponseProvider
             Console.WriteLine(ex.Message);
             HandleActionResult(response, new ErrorResult(ServerFault));
         }
+
         return true;
     }
 

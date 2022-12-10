@@ -9,7 +9,7 @@ public class HttpServer : IDisposable
 {
     public ServerStatus Status { get; private set; } = ServerStatus.Stop;
     private ServerSettings _serverSettings;
-    
+
     private readonly HttpListener _httpListener;
 
     public HttpServer()
@@ -28,15 +28,15 @@ public class HttpServer : IDisposable
 
         if (File.Exists("./settings.json"))
             _serverSettings = JsonSerializer.Deserialize<ServerSettings>(File.ReadAllBytes("./settings.json"))
-                ?? new ServerSettings();
+                              ?? new ServerSettings();
         _httpListener.Prefixes.Clear();
         _httpListener.Prefixes.Add($"http://localhost:{_serverSettings.Port}/");
-        
+
         Console.WriteLine("Launching...");
         _httpListener.Start();
         Status = ServerStatus.Start;
         Console.WriteLine("Launched.");
-        
+
         Listen();
     }
 
@@ -47,7 +47,7 @@ public class HttpServer : IDisposable
             Console.WriteLine("Already stopped.");
             return;
         }
-        
+
         Console.WriteLine("Stopping...");
         _httpListener.Stop();
 

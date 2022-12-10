@@ -28,6 +28,7 @@ public class TopicsController : Controller
             Console.WriteLine(e.Message);
             return new ErrorResult(DbError);
         }
+
         if (topic is null) return new ErrorResult(UserNotFound);
         return new ActionResult
         {

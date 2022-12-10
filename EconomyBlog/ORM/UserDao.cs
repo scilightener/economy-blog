@@ -7,7 +7,7 @@ public class UserDao
     private const string TableName = "[dbo].[Users]";
     private const string DbName = "dev_basics_sem1";
 
-    private readonly DataBase _orm; 
+    private readonly DataBase _orm;
 
     public UserDao()
     {
@@ -20,7 +20,7 @@ public class UserDao
 
     public User? GetByLogin(string login) =>
         _orm.Select<User>($"select * from {TableName} where login='{login}'").FirstOrDefault();
-    
+
     public User? GetByLoginPassword(string login, string password) => _orm
         .Select<User>($"select * from {TableName} where login='{login}' and password='{password}'").FirstOrDefault();
 

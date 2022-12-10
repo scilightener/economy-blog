@@ -10,11 +10,11 @@ public class SessionDao
     private readonly DataBase _orm;
 
     public SessionDao() => _orm = new DataBase(DbName, TableName);
-    
-    public Session? Select(Guid guid) 
+
+    public Session? Select(Guid guid)
         => _orm.Select<Session>($"select * from {TableName} where guid='{guid.ToString()}'").FirstOrDefault();
 
-    public void Insert(Session session) 
+    public void Insert(Session session)
         => _orm.Insert(session);
 
     public void Delete(Guid guid) => _orm.DeleteWhere("id", guid.ToString());

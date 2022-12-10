@@ -1,6 +1,5 @@
 using System.Data.SqlClient;
 using System.Net;
-using System.Web;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
 using EconomyBlog.Models;
@@ -14,13 +13,13 @@ namespace EconomyBlog.Controllers;
 public class AuthorizeController : Controller
 {
     [HttpPOST]
-    public static ActionResult LoginUser(Guid sessionId, string login, string password, string rememberMe="off")
+    public static ActionResult LoginUser(Guid sessionId, string login, string password, string rememberMe = "off")
     {
         var dao = new UserDao();
         User? user;
         try
         {
-            user = dao.GetByLoginPassword(login, password);
+            user = dao.GetByLoginPassword(login, Hashing.Hash(password));
         }
         catch (SqlException e)
         {
@@ -31,15 +30,16 @@ public class AuthorizeController : Controller
         if (user is null)
             return new UnauthorizedResult(UserNotFound);
 
-        
+
         var result = new ActionResult
         {
             StatusCode = HttpStatusCode.Redirect,
             RedirectUrl = @"/feed/",
             Cookies = new CookieCollection
             {
-                new Cookie("SessionId", SessionManager.CreateSession(user.Id, login, DateTime.Now, rememberMe=="on").ToString(), "/")
-                    { Expires = rememberMe=="on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1)}
+                new Cookie("SessionId",
+                        SessionManager.CreateSession(user.Id, login, DateTime.Now, rememberMe == "on").ToString(), "/")
+                    { Expires = rememberMe == "on" ? DateTime.Now.AddDays(150) : DateTime.Now.AddHours(1) }
             }
         };
         return result;

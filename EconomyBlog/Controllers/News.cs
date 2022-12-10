@@ -66,7 +66,7 @@ public class NewsController : Controller
                     .OrderByDescending(newsItem => newsItem.Date)
             });
     }
-    
+
     //
     // [HttpGET(@"^\d+/$")]
     // public static ActionResult GetPost(Guid sessionId, string path)
@@ -131,8 +131,11 @@ public class NewsController : Controller
             return new ErrorResult(DbError);
         }
 
-        var isAdmin = Admins.Logins.Contains(session.Login);
         return ProcessStatic("news", path,
-            new { News = news.OrderByDescending(newsItem => newsItem.Date), IsAdmin = isAdmin });
+            new
+            {
+                News = news.OrderByDescending(newsItem => newsItem.Date),
+                IsAdmin = Admins.Logins.Contains(session.Login)
+            });
     }
 }

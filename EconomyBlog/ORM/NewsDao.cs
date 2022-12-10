@@ -11,7 +11,7 @@ public class NewsDao
     public NewsDao() => _orm = new DataBase(DbName, TableName);
 
     public IEnumerable<News> GetAll() => _orm.Select<News>();
-    
+
     public News? GetById(int id) => _orm.Select<News>($"select * from {TableName} where id='{id}'").FirstOrDefault();
 
     public int Insert(News news) => _orm.Insert(news);
