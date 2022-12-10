@@ -12,6 +12,7 @@ namespace EconomyBlog.Controllers;
 [HttpController("topics")]
 public class TopicsController : Controller
 {
+    // TODO: сделать страницами, а не json
     [HttpGET(@"^\w+/$")]
     public static ActionResult GetUserByLogin(Guid sessionId, string path)
     {

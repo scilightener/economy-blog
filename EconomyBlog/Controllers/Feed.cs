@@ -12,7 +12,7 @@ namespace EconomyBlog.Controllers;
 [HttpController("feed")]
 public class FeedController : Controller
 {
-    [HttpPOST("^edit/$")]
+    [HttpPOST("^create/$")]
     public static ActionResult CreateNewPost(Guid sessionId, string title, string text)
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
@@ -60,7 +60,7 @@ public class FeedController : Controller
     //     };
     // }
 
-    [HttpGET("^edit/$")]
+    [HttpGET("^create/$")]
     public static ActionResult GetNewPostPage(Guid sessionId, string path) =>
         sessionId == Guid.Empty ? new UnauthorizedResult() : ProcessStatic("feed", path);
 

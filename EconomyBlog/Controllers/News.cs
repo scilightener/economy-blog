@@ -98,7 +98,7 @@ public class NewsController : Controller
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var session = SessionManager.GetSessionInfo(sessionId);
         if (session is null) return new UnauthorizedResult();
-        if (Admins.Logins.Contains(session.Login))
+        if (!Admins.Logins.Contains(session.Login))
             return new UnauthorizedResult(NotAnAdmin);
         IEnumerable<Topic>? topics;
         try

@@ -1,8 +1,8 @@
 using System.Data.SqlClient;
 using System.Net;
-using System.Web;
 using EconomyBlog.ActionResults;
 using EconomyBlog.Attributes;
+using EconomyBlog.Models;
 using EconomyBlog.ORM;
 using EconomyBlog.ServerLogic.SessionLogic;
 using static EconomyBlog.Messages;
@@ -16,11 +16,11 @@ public class RegisterController : Controller
     [HttpPOST]
     public static ActionResult RegisterUser(Guid sessionId, string login, string password, string rememberMe = "off")
     {
-        var dao = new UserDao();
         int id;
         try
         {
-            id = dao.Insert(login, Hashing.Hash(password));
+            id = new UserDao().Insert(login, Hashing.Hash(password));
+            new UsersFavoriteTopicsDao().Insert(new UsersFavoriteTopics(id, 0, 0, 0, 0, 0));
         }
         catch (SqlException ex)
         {

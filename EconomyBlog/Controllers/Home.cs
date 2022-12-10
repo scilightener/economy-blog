@@ -16,7 +16,8 @@ public class HomeController : Controller
     [HttpPOST("^edit/$")]
     public static ActionResult UpdateUserInfo(Guid sessionId, string firstName, string lastName, int age,
         string education, string job,
-        int riskFactor, int topic1 = 0, int topic2 = 0, int topic3 = 0, int topic4 = 0, int topic5 = 0)
+        int riskFactor, string topic1 = "", string topic2 = "", string topic3 = "", string topic4 = "",
+        string topic5 = "")
     {
         if (sessionId == Guid.Empty) return new UnauthorizedResult();
         var userId = SessionManager.GetSessionInfo(sessionId)?.UserId ?? -1;
@@ -26,8 +27,10 @@ public class HomeController : Controller
             // no need to update login & password, so they're null
             new UserDao().Update(userId,
                 new User(userId, null, null, firstName, lastName, age, education, job, riskFactor, userId));
-            new UsersFavoriteTopicsDao().Update(new UsersFavoriteTopics(userId, topic1, topic2, topic3, topic4,
-                topic5));
+            var topicDao = new TopicsDao();
+            new UsersFavoriteTopicsDao().Update(new UsersFavoriteTopics(userId, topicDao.GetByName(topic1)?.Id ?? 0,
+                topicDao.GetByName(topic2)?.Id ?? 0, topicDao.GetByName(topic3)?.Id ?? 0,
+                topicDao.GetByName(topic4)?.Id ?? 0, topicDao.GetByName(topic5)?.Id ?? 0));
         }
         catch (SqlException e)
         {

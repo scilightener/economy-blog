@@ -10,6 +10,6 @@ public class UnauthorizedResult : ActionResult
     {
         ContentType = "text/html";
         StatusCode = HttpStatusCode.Unauthorized;
-        Buffer = Encoding.UTF8.GetBytes(GetHtml("./Views/global/error/index.sbnhtml", new{ ErrorText = message}));
+        Buffer = Encoding.UTF8.GetBytes(GetHtml("./Views/global/error/index.html", new { ErrorText = message }));
     }
 }
