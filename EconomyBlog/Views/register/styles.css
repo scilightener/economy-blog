@@ -68,6 +68,15 @@
     color: #666;
 }
 
+.error_msg {
+    padding-left: 20px;
+    color: red;
+    font-size: 12px;
+    position: relative;
+    top: -10px;
+    display: none;
+}
+
 .remember_me {
     margin-left: 25px;
     font-family: 'Poppins', sans-serif;
@@ -117,6 +126,5 @@
         align-items: center;
         padding: 10px;
         padding-bottom: 33px;
-        box-shadow: none;
     }
 }

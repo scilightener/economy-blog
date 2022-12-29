@@ -7,19 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
     <link rel="stylesheet" href="../styles.css" type="text/css" />
-    <link rel="stylesheet" href="../../global.css" type="text/css" />
+    <link rel="stylesheet" href="../../global/global.css" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
     <header>
+        <div class="links_container">
+            <div class="predict_btc_price_container">
+                <a href="/predict_bitcoin_price/">Secret</a>
+            </div>
+            <div class="user_profile_container">
+                <a href="/home/">Your profile</a>
+            </div>
+            <div class="login_container">
+                <a href="/auth/">Login</a>
+            </div>
+            <div class="news_container">
+                <a href="/news/">News</a>
+            </div>
+        </div>
         <div class="logo_container">
-            <a href="../../feed/index.html">
-                <img class="main_logo" src="../content/main_logo.png" height="130" alt="logo_picture">
+            <a href="/feed/">
+                <img class="main_logo" src="/home/content/main_logo.png" height="130" alt="logo_picture">
             </a>
         </div>
     </header>
@@ -32,11 +46,17 @@
                     <tbody>
                         <tr class="first_name">
                             <td>First Name</td>
-                            <td><input type="text" name="first_name" placeholder="Name"></td>
+                            <td>
+                                <input type="text" name="firstName" placeholder="Name" required>
+                                <span class="error_msg firstName">Only latin and cyrillic letters allowed</span>
+                            </td>
                         </tr>
                         <tr class="last_name">
                             <td>Last Name</td>
-                            <td><input type="text" name="last_name" placeholder="Surname"></td>
+                            <td>
+                                <input type="text" name="lastName" placeholder="Surname" required>
+                                <span class="error_msg lastName">Only latin and cyrillic letters allowed</span>
+                            </td>
                         </tr>
                         <tr class="age">
                             <td>Age</td>
@@ -107,17 +127,23 @@
                         </tr>
                         <tr class="education">
                             <td>Education</td>
-                            <td><input type="text" name="education" placeholder="Education"></td>
+                            <td>
+                                <input type="text" name="education" placeholder="Education" required>
+                                <span class="error_msg education">Only latin and cyrillic letters allowed</span>
+                            </td>
                         </tr>
                         <tr class="job">
                             <td>Job</td>
-                            <td><input type="text" name="job" placeholder="Job"></td>
+                            <td>
+                                <input type="text" name="job" placeholder="Job" required>
+                                <span class="error_msg job">Only latin and cyrillic letters allowed</span>
+                            </td>
                         </tr>
                         <tr class="risk_factor">
                             <td>Your risk factor</td>
                             <td>
-                                <input type="range" class="risk_factor_slider_range" value=0 min=0 max=10
-                                    oninput="this.nextElementSibling.value = this.value">
+                                <input type="range" name="riskIndex" class="risk_factor_slider_range" value=0 min=0
+                                    max=10 oninput="this.nextElementSibling.value = this.value">
                                 <output class="risk_factor_slider_value">0</output>
                             </td>
                         </tr>
@@ -125,33 +151,11 @@
                             <td>Your favorite topics</td>
                             <td>
                                 <div class="favorite_topics_checkboxes">
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=1 onclick="chkcontrol(0)">1
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=2 onclick="chkcontrol(1)">2
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=3 onclick="chkcontrol(2)">3
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=4 onclick="chkcontrol(3)">4
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=5 onclick="chkcontrol(4)">5
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=6 onclick="chkcontrol(5)">6
-                                    </label>
-
-                                    <label class="favorite_topic">
-                                        <input type="checkbox" name="chkb" value=7 onclick="chkcontrol(6)">7
-                                    </label>
+                                    {{for topic in topics}}
+                                        <label class="favorite_topic">
+                                            <input type="checkbox" name="chkb" value={{topic.name}} onclick="chkcontrol({{for.index}})">{{topic.name}}
+                                        </label>
+                                    {{end}}
                                 </div>
                             </td>
                         </tr>
@@ -165,7 +169,32 @@
 
     </main>
 
-    <script type="text/javascript">
+    <script>
+        window.onload = function () {
+            document.input_data.onsubmit = function () {
+                let res = true;
+                Array.from(document.querySelectorAll('input')).filter(input => input.type == "text").forEach(inputElem => {
+                    if (!validate(inputElem.name, /^[A-Za-zА-Яа-яЁё.\s]+$/)) {
+                        res = false;
+                        inputElem.nextElementSibling.style.display = "block";
+                    }
+                });
+                console.log(res);
+                return res;
+            }
+
+            Array.from(document.querySelectorAll('input')).filter(input => input.type == "text").forEach(inputElem => document.getElementsByName(inputElem.name)[0].onfocus = () => inputElem.nextElementSibling.style.display = "none");
+        }
+
+        function validate(inputName, reg) {
+            let input = document.getElementsByName(inputName)[0];
+            if (!input.value.match(reg)) {
+                input.value = "";
+                return false;
+            }
+            return true;
+        }
+
         function chkcontrol(j) {
             var total = 0;
             for (var i = 0; i < document.input_data.chkb.length; i++) {

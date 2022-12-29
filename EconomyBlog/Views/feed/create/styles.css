@@ -1,0 +1,101 @@
+header .links_container {
+    display: flex;
+    justify-content: center;
+    background: #fff;
+}
+
+header .links_container div {
+    padding: 5px 20px;
+}
+
+header a {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+}
+
+header a:hover {
+    text-decoration: none;
+    color: #57b846;
+}
+
+main {
+    min-height: calc(100vh - 169px) !important;
+    flex-direction: column;
+}
+
+.info_container {
+    background: #fff;
+    max-width: 700px;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form_header {
+    text-align: center;
+    padding: 0px 30px 10px 30px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.text_info input[type="text"] {
+    height: 38px;
+    padding: 0 30px;
+}
+
+.text_info textarea {
+    padding: 10px 30px;
+}
+
+.text_info input[type="text"],
+.text_info textarea {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666;
+    width: 100%;
+    max-width: 350px;
+    background: #e6e6e6;
+    border-radius: 16px;
+}
+
+td:first-child {
+    font-weight: 600;
+}
+
+main .text_info td {
+    padding: 15px 25px;
+}
+
+.post_button_container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
+    margin: 10px;
+}
+
+@media screen and (max-width: 490px) {
+    .info_container {
+        box-shadow: none;
+    }
+
+    main,
+    .info_container {
+        padding: 0;
+        margin: 0;
+        display: block;
+    }
+
+    tr {
+        display: flex;
+        flex-direction: column;
+    }
+}

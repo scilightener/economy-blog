@@ -6,20 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
-    <link rel="stylesheet" href="styles.css" type="text/css" />
-    <link rel="stylesheet" href="../global.css" type="text/css" />
+    <link rel="stylesheet" href="/home/styles.css" type="text/css" />
+    <link rel="stylesheet" href="/global/global.css" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
     <header>
+        <div class="links_container">
+            <div class="predict_btc_price_container">
+                <a href="/predict_bitcoin_price/">Secret</a>
+            </div>
+            <div class="user_profile_container">
+                <a href="/home/">Your profile</a>
+            </div>
+            <div class="login_container">
+                <a href="/auth/">Login</a>
+            </div>
+            <div class="news_container">
+                <a href="/news/">News</a>
+            </div>
+        </div>
         <div class="logo_container">
-            <a href="../feed/index.html">
-                <img class="main_logo" src="content/main_logo.png" height="130" alt="logo_picture">
+            <a href="/feed/">
+                <img class="main_logo" src="/home/content/main_logo.png" height="130" alt="logo_picture">
             </a>
         </div>
     </header>
@@ -27,43 +41,53 @@
     <main>
         <div class="show info_container">
             <div class="user_pic">
-                <img src="content/cutty.jpg" height="150" alt="user picture">
+                <img src="/home/content/cutty.jpg" height="150" alt="user picture">
                 <label class="form_header">User's profile</label>
             </div>
             <table class="text_info">
                 <tbody>
+                    <tr class="login">
+                        <td>Login</td>
+                        <td>{{login}}</td>
+                    </tr>
                     <tr class="first_name">
                         <td>First Name</td>
-                        <td>em</td>
+                        <td>{{first_name}}</td>
                     </tr>
                     <tr class="last_name">
                         <td>Last Name</td>
-                        <td>why..</td>
+                        <td>{{last_name}}</td>
                     </tr>
                     <tr class="age">
                         <td>Age</td>
-                        <td>actually</td>
+                        <td>{{age}}</td>
                     </tr>
                     <tr class="education">
                         <td>Education</td>
-                        <td>are u askin...</td>
+                        <td>{{education}}</td>
                     </tr>
                     <tr class="job">
                         <td>Job</td>
-                        <td>'bout that??</td>
+                        <td>{{job}}</td>
                     </tr>
-                    <tr class="risk_factor">
+                    <tr class="risk_index">
                         <td>Your risk factor</td>
-                        <td>hm??</td>
+                        <td>{{risk_index}}</td>
                     </tr>
                     <tr class="favorite_topics">
                         <td>Your favorite topics</td>
-                        <td>lol</td>
+                        <td>
+                            {{for topic in favorite_topics}}
+                                {{if topic.name != "None"}}
+                                    <a class="user_favorite_topic" href="/topics/{{topic.name}}">#{{topic.name}}</a>
+                                {{end}}
+                            {{end}}
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <div class="edit_info_redir_container">
-                <a class="edit_info_redir" href="./edit/index.html">
+                <a class="edit_info_redir" href="./edit/">
                     Edit
                     <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
                 </a>

@@ -20,18 +20,32 @@ header a:hover {
     color: #57b846;
 }
 
-.create_new_post_container {
-    padding: 25px 0;
+main {
+    min-height: calc(100vh - 170px) !important;
+    flex-direction: column;
 }
 
-.post_section {
+.head_buttons_container {
+    display: flex;
+    justify-content: center;
+}
+
+.post_news_container {
+    padding: 25px 10px;
+}
+
+.sort_news_container {
+    padding: 25px 10px;
+}
+
+.news_section {
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif!important;
     font-weight: 500;
 }
 
-.post {
+.news_item {
     max-width: 640px;
     background: #fff;
     border-radius: 10px;
@@ -39,13 +53,10 @@ header a:hover {
     flex-direction: column;
     padding: 50px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-.post:not(:first-child) {
     margin-top: 70px;
 }
 
-.post .post_header {
+.news_item .news_item_header {
     display: flex;
     justify-content: center;
     font-weight: 700;
@@ -53,14 +64,12 @@ header a:hover {
     padding-bottom: 15px;
 }
 
-.post .
-
-.post .post_content {
+.news_item .news_item_content {
     display: flex;
     flex-wrap: wrap;
 }
 
-.post .post_info {
+.news_item .news_item_info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -68,12 +77,18 @@ header a:hover {
     width: 100%;
 }
 
-.post .post_info .post_publication_date {
+.news_item .news_item_info .news_item_publication_date {
     color: #666;
     font-style: italic;
+    padding-left: 30px;
 }
 
-.post .post_info .post_author {
+.news_item .news_item_info .news_item_topics {
     font-weight: 500;
     color: #3a3a3a;
+    max-width: 75%;
+}
+
+.news_item_topic {
+    padding-right: 10px;
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post news</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+    <link rel="stylesheet" href="/global/global.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="links_container">
+            <div class="predict_btc_price_container">
+                <a href="/predict_bitcoin_price/">Secret</a>
+            </div>
+            <div class="user_profile_container">
+                <a href="/home/">Your profile</a>
+            </div>
+            <div class="login_container">
+                <a href="/auth/">Login</a>
+            </div>
+            <div class="news_container">
+                <a href="/news/">News</a>
+            </div>
+        </div>
+        <div class="logo_container">
+            <a href="/feed/">
+                <img class="main_logo" src="content/main_logo.png" height="130" alt="logo_picture">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="info_container">
+            <label class="form_header">Post your news</label>
+            <form name=input_data class="edit_info_form" method="POST" action="#">
+                <table class="text_info">
+                    <tbody>
+                        <tr class="title">
+                            <td>Title</td>
+                            <td><input type="text" name="title" placeholder="Title"></td>
+                        </tr>
+                        <tr class="content">
+                            <td>Text</td>
+                            <td>
+                                <textarea name="text" id="news_item_content" rows="5" maxlength="5000"
+                                    placeholder="What's new today?"></textarea>
+                            </td>
+                        </tr>
+                        <tr class="topics">
+                            <td>Topics</td>
+                            <td>
+                                <div class="topics_checkboxes">
+                                    {{for topic in topics}}
+                                        <label class="topic">
+                                            <input type="checkbox" name="chkb" value={{for.index+1}} onclick="chkcontrol({{for.index}})">{{topic.name}}
+                                        </label>
+                                    {{end}}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="post_button_container">
+                    <button type="submit">POST</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        function chkcontrol(j) {
+            var total = 0;
+            for (var i = 0; i < document.input_data.chkb.length; i++) {
+                if (document.input_data.chkb[i].checked) {
+                    total++;
+                }
+                if (total > 3) {
+                    alert("Please choose no more than 3 topics")
+                    document.input_data.chkb[j].checked = false;
+                    return false;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

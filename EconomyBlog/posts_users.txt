@@ -1,0 +1,9 @@
+1	Hello, World!	Hi there! This is my first publication and I hope you all really enjoyed reading it, because I think I'm nearly done. ;)	scilightener	2022-12-08 00:24:21.000
+2	New post by me!! Again!	I so liked making posts and seeing them in feed page, that I literally can't stop writing them... So I've concluded at least testing my ORM on double single quotes (''), since it worked out just fine on a single ones. And may be some kind of digits 1234 and cyrillic characters will be достаточно for testing purposes. I'm done.	scilightener	2022-12-08 00:44:00.000
+3	иууу	эмм.. почему здесь всё на пендосском? где русский? русская культура????? ясно сайт по вербованию агентов госдепа	arshap	2022-12-08 17:57:03.000
+4	to artёm	emm... ti dyrak?	scilightener	2022-12-08 17:58:01.000
+5	Загадка человечества	Мне передали в управление ноутбук создателя данного сайта и вот что я хочу сказать: КАК ПИСАТЬ НА ЭТОЙ КЛАВИАТУРЕ!???!!! Занятие, конечно, довольно занятное, даже тренирует мозг и память, я бы сказала. В общем и целом, сайту ставлю 10 русских ъъъъъъъъъъ из 10!	Kama	2022-12-08 19:02:09.000
+
+1	scilightener	192837465	Nikita	Lopukhin	13	KPFU ITIS	None	1	1
+2	arshap	5794	Artёm	Shapovalov	18	ITIS KPFU	None	3	2
+3	Kama	1029384756	Камилла	Мама дорогая	21	КФУ ИТИС	Жить	10	3

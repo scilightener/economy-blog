@@ -63,8 +63,21 @@
     padding: 0 30px;
 }
 
+.error_msg {
+    padding-left: 10px;
+    color: red;
+    font-size: 12px;
+    position: relative;
+    display: none;
+}
+
 td:first-child {
     font-weight: 600;
+}
+
+td:nth-child(2) {
+    font-family: 'Montserrat', sans-serif!important;
+    font-weight: 500;
 }
 
 main .text_info td {
@@ -147,6 +160,10 @@ main .text_info td {
     gap: 0.9em;
 }
 
+.user_favorite_topic {
+    padding-right: 10px;
+}
+
 .update_user_data_button_container {
     width: 100%;
     display: flex;
@@ -157,10 +174,6 @@ main .text_info td {
 }
 
 @media screen and (max-width: 490px) {
-    .info_container {
-        box-shadow: none;
-    }
-
     main,
     .info_container {
         padding: 0;

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News</title>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+    <link rel="stylesheet" href="/global/global.css" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" async></script>
+    <header>
+        <div class="links_container">
+            <div class="predict_btc_price_container">
+                <a href="/predict_bitcoin_price/">Secret</a>
+            </div>
+            <div class="user_profile_container">
+                <a href="/home/">Your profile</a>
+            </div>
+            <div class="login_container">
+                <a href="/auth/">Login</a>
+            </div>
+            <div class="news_container">
+                <a href="/news/">News</a>
+            </div>
+        </div>
+        <div class="logo_container">
+            <a href="/feed/">
+                <img class="main_logo" src="content/main_logo.png" height="130" alt="logo_picture">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="head_buttons_container">
+            {{if is_admin}}
+                <div class="post_news_container">
+                    <a href="edit/"><button>Post news</button></a>
+                </div>
+            {{end}}
+            <div class="sort_news_container">
+                <button onclick="getInterestingNews()">Select interesting news</button>
+            </div>
+        </div>
+        <div id="news_section" class="news_section">
+            {{for item in news}}
+                <div class="news_item">
+                    <div class="news_item_header">{{item.title}}</div>
+                    <div class="news_item_content">
+                        <p>{{item.text}}</p>
+                    </div>
+                    <div class="news_item_info">
+                        <div class="news_item_topics">
+                            {{for topic in item.topics}}
+                                <a class="news_item_topic" href="/topics/{{topic.name}}">#{{topic.name}}</a>
+                            {{end}}
+                        </div>
+                        <div class="news_item_publication_date">{{item.date}}</div>
+                    </div>
+                </div>
+            {{end}}
+        </div>
+    </main>
+    <script>
+        function getInterestingNews() {
+            $.ajax({
+                type: "GET",
+                url: "/news/sort/",
+                success: function (response) {
+                    if (response.toLowerCase().startsWith("<!doctype html>")) {
+                        document.getElementsByTagName('html').innerHTML = response;
+                    } else if (response != "") {
+                        $('#news_section').replaceWith(response);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

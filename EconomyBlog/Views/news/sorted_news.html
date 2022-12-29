@@ -1,0 +1,16 @@
+{{for item in news}}
+    <div class="news_item">
+        <div class="news_item_header">{{item.title}}</div>
+        <div class="news_item_content">
+            <p>{{item.text}}</p>
+        </div>
+        <div class="news_item_info">
+            <div class="news_item_topics">
+                {{for topic in item.topics}}
+                    <a class="news_item_topic" href="/topics/{{topic.name}}">#{{topic.name}}</a>
+                {{end}}
+            </div>
+            <div class="news_item_publication_date">{{item.date}}</div>
+        </div>
+    </div>
+{{end}}
