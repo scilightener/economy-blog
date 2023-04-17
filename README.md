@@ -28,3 +28,7 @@
 * Written without use of any framework. All functionality of the server (reacting to HttpRequests) is written only using the HttpListener class
 * ORM, DAO, dynamic routing, authorization check and other stuff implemented without the use of external libraries
 * Ok, everything i brought from this experience is that frameworks are good
+
+# Bad things here
+* I didn't know anything about database design when working on this project
+* I didn't really understand the MVC pattern well when was trying to implement it here
